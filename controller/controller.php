@@ -1,24 +1,86 @@
 <?php
 require_once __DIR__ . '/../model/model.php'; // Incluye el modelo
 
-$modelo = new Modelo(); // Instanciamos correctamente tu clase 'Modelo'
+$modelo = new Modelo(); // Instanciar la clase Modelo
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $month = $_POST['month'] ?? '';
-    $year = $_POST['year'] ?? '';
-    $amount = $_POST['amount'] ?? '';
+    $action = $_POST['action'] ?? '';
 
-    if (!empty($month) && !empty($year) && is_numeric($amount) && $amount > 0) {
-        $resultado = $modelo->addOrUpdateIncome($month, $year, $amount); // Usamos el método de la clase
-        if ($resultado === 'actualizado') {
-            header('Location: ../index.php?status=updated');
+    if ($action === 'addIncome') {
+        $month = $_POST['month'] ?? '';
+        $year = $_POST['year'] ?? '';
+        $amount = $_POST['amount'] ?? '';
+
+        if (!empty($month) && !empty($year) && is_numeric($amount) && $amount >= 0) {
+            $resultado = $modelo->addOrUpdateIncome($month, $year, $amount);
+            if ($resultado === 'actualizado') {
+                header('Location: ../index.php?status=updated');
+            } else {
+                header('Location: ../index.php?status=success');
+            }
         } else {
-            header('Location: ../index.php?status=success');
+            header('Location: ../index.php?status=error');
         }
         exit;
-    } else {
-        header('Location: ../index.php?status=error');
+    }
+
+    if ($action === 'updateIncome') {
+        $idIncome = $_POST['idIncome'] ?? '';
+        $amount = $_POST['amount'] ?? '';
+
+        if (!empty($idIncome) && is_numeric($amount) && $amount >= 0) {
+            $modelo->updateIncome($idIncome, $amount);
+            header('Location: ../index.php?status=income_updated');
+        } else {
+            header('Location: ../index.php?status=error');
+        }
         exit;
     }
+
+    if ($action === 'deleteIncome') {
+        $idIncome = $_POST['idIncome'] ?? '';
+
+        if (!empty($idIncome)) {
+            $modelo->deleteIncome($idIncome);
+            header('Location: ../index.php?status=income_deleted');
+        } else {
+            header('Location: ../index.php?status=error');
+        }
+        exit;
+    }
+
+    if ($action === 'addBill') {
+        $description = $_POST['description'] ?? '';
+        $amount = $_POST['amount'] ?? 0;
+        $categoryId = $_POST['categoryId'] ?? 0;
+        $reportId = $_POST['reportId'] ?? 0;
+
+        $modelo->addBill($description, $amount, $categoryId, $reportId);
+        header('Location: ../index.php?status=bill_added');
+        exit;
+    }
+
+    if ($action === 'updateBill') {
+        $id = $_POST['id'] ?? 0;
+        $description = $_POST['description'] ?? '';
+        $amount = $_POST['amount'] ?? 0;
+        $categoryId = $_POST['categoryId'] ?? 0;
+
+        $modelo->updateBill($id, $description, $amount, $categoryId);
+        header('Location: ../index.php?status=bill_updated');
+        exit;
+    }
+
+    if ($action === 'deleteBill') {
+        $id = $_POST['id'] ?? 0;
+
+        $modelo->deleteBill($id);
+        header('Location: ../index.php?status=bill_deleted');
+        exit;
+    }
+
+    // Si no se reconoce la acción
+    header('Location: ../index.php?status=invalid_action');
+    exit;
 }
 ?>

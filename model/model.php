@@ -12,7 +12,7 @@ class Modelo {
     // Obtener todos los ingresos
     public function getAllIncomes() {
         try {
-            $sql = "SELECT r.month, r.year, i.value 
+            $sql = "SELECT i.id AS idIncome, r.month, r.year, i.value 
                     FROM income i
                     INNER JOIN reports r ON i.idReport = r.id";
             $stmt = $this->conexion->prepare($sql);
@@ -39,7 +39,7 @@ class Modelo {
             $report = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($report) {
-                // Ya existe, actualizamos solo el valor del ingreso
+                // Ya existe reporte, actualizamos ingreso
                 $idReport = $report['id'];
                 $sql = "UPDATE income SET value = :amount WHERE idReport = :idReport";
                 $stmt = $this->conexion->prepare($sql);
@@ -67,6 +67,86 @@ class Modelo {
             die("Error al agregar o actualizar ingreso: " . $e->getMessage());
         } catch (Exception $e) {
             die("Error: " . $e->getMessage());
+        }
+    }
+
+    // Actualizar el valor de un ingreso específico
+    public function updateIncome($idIncome, $newAmount) {
+        try {
+            if ($newAmount < 0) {
+                throw new Exception("El ingreso no puede ser menor a cero.");
+            }
+
+            $sql = "UPDATE income SET value = :amount WHERE id = :idIncome";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':amount', $newAmount);
+            $stmt->bindParam(':idIncome', $idIncome);
+            $stmt->execute();
+            return 'actualizado';
+        } catch (PDOException $e) {
+            die("Error al actualizar ingreso: " . $e->getMessage());
+        } catch (Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    // Eliminar un ingreso específico
+    public function deleteIncome($idIncome) {
+        try {
+            $sql = "DELETE FROM income WHERE id = :idIncome";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':idIncome', $idIncome);
+            $stmt->execute();
+            return 'eliminado';
+        } catch (PDOException $e) {
+            die("Error al eliminar ingreso: " . $e->getMessage());
+        }
+    }
+
+    // Agregar un nuevo gasto
+    public function addBill($description, $amount, $categoryId, $reportId) {
+        try {
+            $sql = "INSERT INTO bills (description, value, idCategory, idReport) 
+                    VALUES (:description, :amount, :categoryId, :reportId)";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':amount', $amount);
+            $stmt->bindParam(':categoryId', $categoryId);
+            $stmt->bindParam(':reportId', $reportId);
+            $stmt->execute();
+            return 'nuevo';
+        } catch (PDOException $e) {
+            die("Error al agregar gasto: " . $e->getMessage());
+        }
+    }
+
+    // Actualizar un gasto
+    public function updateBill($idBill, $description, $amount, $categoryId) {
+        try {
+            $sql = "UPDATE bills SET description = :description, value = :amount, idCategory = :categoryId 
+                    WHERE id = :idBill";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':description', $description);
+            $stmt->bindParam(':amount', $amount);
+            $stmt->bindParam(':categoryId', $categoryId);
+            $stmt->bindParam(':idBill', $idBill);
+            $stmt->execute();
+            return 'actualizado';
+        } catch (PDOException $e) {
+            die("Error al actualizar gasto: " . $e->getMessage());
+        }
+    }
+
+    // Eliminar un gasto
+    public function deleteBill($idBill) {
+        try {
+            $sql = "DELETE FROM bills WHERE id = :idBill";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':idBill', $idBill);
+            $stmt->execute();
+            return 'eliminado';
+        } catch (PDOException $e) {
+            die("Error al eliminar gasto: " . $e->getMessage());
         }
     }
 }

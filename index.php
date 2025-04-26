@@ -2,7 +2,7 @@
 require_once __DIR__ . '/model/model.php';
 $mensaje = '';
 
-$modelo = new Modelo(); // ← Instancia del modelo para poder llamar sus métodos
+$modelo = new Modelo();
 
 if (isset($_GET['status'])) {
     switch ($_GET['status']) {
@@ -12,13 +12,16 @@ if (isset($_GET['status'])) {
         case 'updated':
             $mensaje = 'Ingreso actualizado correctamente.';
             break;
+        case 'deleted':
+            $mensaje = 'Ingreso eliminado correctamente.';
+            break;
         case 'error':
-            $mensaje = 'Error al registrar el ingreso.';
+            $mensaje = 'Error al procesar la solicitud.';
             break;
     }
 }
 
-$incomes = $modelo->getAllIncomes(); // ← Llamamos correctamente al método
+$incomes = $modelo->getAllIncomes();
 ?>
 
 <!DOCTYPE html>
@@ -30,56 +33,74 @@ $incomes = $modelo->getAllIncomes(); // ← Llamamos correctamente al método
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-    <h1>Registrar o Modificar Ingresos</h1>
+
+    <h1>Registrar, Modificar o Eliminar Ingresos</h1>
 
     <?php if ($mensaje): ?>
         <div class="mensaje-exito"><?php echo $mensaje; ?></div>
     <?php endif; ?>
 
+    <!-- Formulario para registrar nuevo ingreso -->
     <form action="controller/controller.php" method="POST">
+        <input type="hidden" name="action" value="addOrUpdate">
+        
         <label for="month">Mes:</label>
         <select name="month" id="month" required>
             <option value="">Seleccione un mes</option>
-            <option value="Enero">Enero</option>
-            <option value="Febrero">Febrero</option>
-            <option value="Marzo">Marzo</option>
-            <option value="Abril">Abril</option>
-            <option value="Mayo">Mayo</option>
-            <option value="Junio">Junio</option>
-            <option value="Julio">Julio</option>
-            <option value="Agosto">Agosto</option>
-            <option value="Septiembre">Septiembre</option>
-            <option value="Octubre">Octubre</option>
-            <option value="Noviembre">Noviembre</option>
-            <option value="Diciembre">Diciembre</option>
+            <?php 
+            $meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            foreach ($meses as $mes): ?>
+                <option value="<?php echo $mes; ?>"><?php echo $mes; ?></option>
+            <?php endforeach; ?>
         </select>
-        <br><br>
 
         <label for="year">Año:</label>
         <input type="number" name="year" id="year" required min="2000" max="2100">
-        <br><br>
 
         <label for="amount">Ingreso (Valor):</label>
         <input type="number" name="amount" id="amount" required min="0" step="0.01">
-        <br><br>
 
-        <button type="submit">Guardar</button>
+        <button type="submit">Guardar ingreso</button>
     </form>
 
     <h2>Historial de Ingresos</h2>
+
     <table border="1" cellpadding="5" cellspacing="0">
-        <tr>
-            <th>Mes</th>
-            <th>Año</th>
-            <th>Ingreso</th>
-        </tr>
+        <thead>
+            <tr>
+                <th>Mes</th>
+                <th>Año</th>
+                <th>Ingreso</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
         <?php foreach ($incomes as $income): ?>
             <tr>
                 <td><?php echo htmlspecialchars($income['month']); ?></td>
                 <td><?php echo htmlspecialchars($income['year']); ?></td>
                 <td>$<?php echo number_format($income['value'], 2, ',', '.'); ?></td>
+                <td>
+                    <!-- Formulario para actualizar este ingreso -->
+                    <form action="controller/controller.php" method="POST" style="display:inline;">
+                        <input type="hidden" name="action" value="updateIncome">
+                        <input type="hidden" name="idIncome" value="<?php echo $income['idIncome']; ?>">
+                        <input type="number" name="amount" placeholder="Nuevo valor" required step="0.01">
+                        <button type="submit">Actualizar</button>
+                    </form>
+
+                    <!-- Formulario para eliminar este ingreso -->
+                    <form action="controller/controller.php" method="POST" style="display:inline;">
+                        <input type="hidden" name="action" value="deleteIncome">
+                        <input type="hidden" name="idIncome" value="<?php echo $income['idIncome']; ?>">
+                        <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este ingreso?');">Eliminar</button>
+                    </form>
+                </td>
             </tr>
         <?php endforeach; ?>
+        </tbody>
     </table>
+
 </body>
 </html>
