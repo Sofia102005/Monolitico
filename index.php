@@ -37,13 +37,13 @@ $incomes = $modelo->getAllIncomes();
     <h1>Registrar, Modificar o Eliminar Ingresos</h1>
 
     <?php if ($mensaje): ?>
-        <div class="mensaje-exito"><?php echo $mensaje; ?></div>
+        <div class="mensaje-exito"><?php echo htmlspecialchars($mensaje); ?></div>
     <?php endif; ?>
 
     <!-- Formulario para registrar nuevo ingreso -->
     <form action="controller/controller.php" method="POST">
-        <input type="hidden" name="action" value="addOrUpdate">
-        
+        <input type="hidden" name="action" value="addIncome"> <!-- CORREGIDO -->
+
         <label for="month">Mes:</label>
         <select name="month" id="month" required>
             <option value="">Seleccione un mes</option>
@@ -51,7 +51,7 @@ $incomes = $modelo->getAllIncomes();
             $meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             foreach ($meses as $mes): ?>
-                <option value="<?php echo $mes; ?>"><?php echo $mes; ?></option>
+                <option value="<?php echo htmlspecialchars($mes); ?>"><?php echo htmlspecialchars($mes); ?></option>
             <?php endforeach; ?>
         </select>
 

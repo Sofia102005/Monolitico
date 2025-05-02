@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../model/model.php'; // Incluye el modelo
+require_once __DIR__ . '/../model/model.php';
 
-$modelo = new Modelo(); // Instanciar la clase Modelo
+$modelo = new Modelo();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
@@ -28,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idIncome = $_POST['idIncome'] ?? '';
         $amount = $_POST['amount'] ?? '';
 
-        if (!empty($idIncome) && is_numeric($amount) && $amount >= 0) {
+        if (is_numeric($idIncome) && is_numeric($amount) && $amount >= 0) {
             $modelo->updateIncome($idIncome, $amount);
-            header('Location: ../index.php?status=income_updated');
+            header('Location: ../index.php?status=updated');
         } else {
             header('Location: ../index.php?status=error');
         }
@@ -40,9 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'deleteIncome') {
         $idIncome = $_POST['idIncome'] ?? '';
 
-        if (!empty($idIncome)) {
+        if (is_numeric($idIncome)) {
             $modelo->deleteIncome($idIncome);
-            header('Location: ../index.php?status=income_deleted');
+            header('Location: ../index.php?status=deleted');
         } else {
             header('Location: ../index.php?status=error');
         }
@@ -55,8 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $categoryId = $_POST['categoryId'] ?? 0;
         $reportId = $_POST['reportId'] ?? 0;
 
-        $modelo->addBill($description, $amount, $categoryId, $reportId);
-        header('Location: ../index.php?status=bill_added');
+        if (!empty($description) && is_numeric($amount) && is_numeric($categoryId) && is_numeric($reportId)) {
+            $modelo->addBill($description, $amount, $categoryId, $reportId);
+            header('Location: ../index.php?status=success');
+        } else {
+            header('Location: ../index.php?status=error');
+        }
         exit;
     }
 
@@ -66,21 +70,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $amount = $_POST['amount'] ?? 0;
         $categoryId = $_POST['categoryId'] ?? 0;
 
-        $modelo->updateBill($id, $description, $amount, $categoryId);
-        header('Location: ../index.php?status=bill_updated');
+        if (is_numeric($id) && !empty($description) && is_numeric($amount) && is_numeric($categoryId)) {
+            $modelo->updateBill($id, $description, $amount, $categoryId);
+            header('Location: ../index.php?status=updated');
+        } else {
+            header('Location: ../index.php?status=error');
+        }
         exit;
     }
 
     if ($action === 'deleteBill') {
         $id = $_POST['id'] ?? 0;
 
-        $modelo->deleteBill($id);
-        header('Location: ../index.php?status=bill_deleted');
+        if (is_numeric($id)) {
+            $modelo->deleteBill($id);
+            header('Location: ../index.php?status=deleted');
+        } else {
+            header('Location: ../index.php?status=error');
+        }
         exit;
     }
 
-    // Si no se reconoce la acción
-    header('Location: ../index.php?status=invalid_action');
+    // Acción no reconocida
+    header('Location: ../index.php?status=error');
     exit;
 }
-?>
