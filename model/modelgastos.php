@@ -9,12 +9,10 @@ class ModeloGasto {
         $this->conexion = $db->conectar();
     }
 
-    /**
-     * Agrega un gasto, creando el reporte si no existe.
-     */
+   
     public function addBill($amount, $categoryId, $month, $year) {
         try {
-            // Verificar si ya existe un reporte
+           
             $sql = "SELECT id FROM reports WHERE month = :month AND year = :year";
             $stmt = $this->conexion->prepare($sql);
             $stmt->bindParam(':month', $month);
@@ -83,9 +81,7 @@ class ModeloGasto {
         }
     }
 
-    /**
-     * Obtiene todos los gastos con sus categorías y fechas.
-     */
+
     public function getAllBills() {
         try {
             $sql = "SELECT 
