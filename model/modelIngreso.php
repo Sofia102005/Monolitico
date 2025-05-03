@@ -116,6 +116,25 @@ class ModeloIngreso {
         }
     }
 
+    public function addAmount($idIncome, $amount) {
+        try {
+            if ($amount < 0) {
+                throw new Exception("El ingreso no puede ser menor a cero.");
+            }
+    
+            $sql = "UPDATE income SET value = value + :amount WHERE id = :idIncome";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':amount', $amount);
+            $stmt->bindParam(':idIncome', $idIncome);
+            $stmt->execute();
+            return 'actualizado';
+        } catch (PDOException $e) {
+            die("Error al agregar cantidad: " . $e->getMessage());
+        } catch (Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
     public function deleteIncome($idIncome) {
         try {
             $sql = "DELETE FROM income WHERE id = :idIncome";

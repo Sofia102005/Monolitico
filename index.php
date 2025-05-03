@@ -26,12 +26,14 @@ $incomes = $modelo->getAllIncomes();
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control de Gastos - Ingresos</title>
     <link rel="stylesheet" href="estilos.css">
 </head>
+
 <body>
 
     <h1>Registrar, Modificar o Eliminar Ingresos</h1>
@@ -41,14 +43,26 @@ $incomes = $modelo->getAllIncomes();
     <?php endif; ?>
 
     <form action="controller/controller.php" method="POST">
-        <input type="hidden" name="action" value="addIncome"> 
+        <input type="hidden" name="action" value="addIncome">
 
         <label for="month">Mes:</label>
         <select name="month" id="month" required>
             <option value="">Seleccione un mes</option>
-            <?php 
-            $meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            <?php
+            $meses = [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+            ];
             foreach ($meses as $mes): ?>
                 <option value="<?php echo htmlspecialchars($mes); ?>" <?php if (in_array($mes, array_column($incomes, 'month'))): ?> disabled <?php endif; ?>><?php echo htmlspecialchars($mes); ?></option>
             <?php endforeach; ?>
@@ -75,31 +89,38 @@ $incomes = $modelo->getAllIncomes();
             </tr>
         </thead>
         <tbody>
-        <?php foreach ($incomes as $income): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($income['month']); ?></td>
-                <td><?php echo htmlspecialchars($income['year']); ?></td>
-                <td>$<?php echo number_format($income['value'], 2, ',', '.'); ?></td>
-                <td>
-                    <!-- Formulario para actualizar este ingreso -->
-                    <form action="controller/controller.php" method="POST" style="display:inline;">
-                        <input type="hidden" name="action" value="updateIncome">
-                        <input type="hidden" name="idIncome" value="<?php echo $income['idIncome']; ?>">
-                        <input type="number" name="amount" placeholder="Nuevo valor" required step="0.01">
-                        <button type="submit">Actualizar</button>
-                    </form>
+            <?php foreach ($incomes as $income): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($income['month']); ?></td>
+                    <td><?php echo htmlspecialchars($income['year']); ?></td>
+                    <td>$<?php echo number_format($income['value'], 2, ',', '.'); ?></td>
+                    <td>
 
-                    <!-- Formulario para eliminar este ingreso -->
-                    <form action="controller/controller.php" method="POST" style="display:inline;">
-                        <input type="hidden" name="action" value="deleteIncome">
-                        <input type="hidden" name="idIncome" value="<?php echo $income['idIncome']; ?>">
-                        <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este ingreso?');">Eliminar</button>
-                    </form>
-                </td>
-            </tr>
-        <?php endforeach; ?>
+                        <form action="controller/controller.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="action" value="updateIncome">
+                            <input type="hidden" name="idIncome" value="<?php echo $income['idIncome']; ?>">
+                            <input type="number" name="amount" placeholder="Nuevo valor" required step="0.01">
+                            <button type="submit">Actualizar</button>
+                        </form>
+
+                        <form action="controller/controller.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="action" value="addAmount">
+                            <input type="hidden" name="idIncome" value="<?php echo $income['idIncome']; ?>">
+                            <input type="number" name="amount" value="5" style="width: 50px;">
+                            <button type="submit">Sumar</button>
+                        </form>
+
+                        <form action="controller/controller.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="action" value="deleteIncome">
+                            <input type="hidden" name="idIncome" value="<?php echo $income['idIncome']; ?>">
+                            <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este ingreso?');">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
 
 </body>
+
 </html>

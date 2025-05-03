@@ -54,6 +54,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    if ($action === 'addAmount') {
+        $idIncome = $_POST['idIncome'] ?? '';
+        $amount = $_POST['amount'] ?? '';
+
+        if (is_numeric($idIncome) && is_numeric($amount) && $amount >= 0) {
+            $modelo->addAmount($idIncome, $amount);
+            header('Location: ../index.php?status=updated');
+        } else {
+            header('Location: ../index.php?status=error');
+        }
+        exit;
+    }
+
     if ($action === 'addBill') {
         $description = $_POST['description'] ?? '';
         $amount = $_POST['amount'] ?? 0;
