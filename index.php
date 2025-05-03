@@ -25,7 +25,6 @@ if (isset($_GET['status'])) {
     }
 }
 
-// Obtener datos
 $incomes = $modelo->getAllIncomes();
 $bills = $modeloGastos->getAllBills();
 $meses = [
@@ -69,8 +68,14 @@ $meses = [
         <select name="month" id="month" required>
             <option value="">Seleccione un mes</option>
             <?php foreach ($meses as $mes): ?>
-                <option value="<?php echo htmlspecialchars($mes); ?>"
-                    <?php if (in_array($mes, array_column($incomes, 'month'))): ?> disabled <?php endif; ?>>
+                <?php $disabled = false; ?>
+                <?php foreach ($incomes as $income): ?>
+                    <?php if ($income['month'] == $mes && $income['year'] == $_POST['year']): ?>
+                        <?php $disabled = true; ?>
+                        <?php break; ?>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                <option value="<?php echo htmlspecialchars($mes); ?>" <?php if ($disabled): ?> disabled <?php endif; ?>>
                     <?php echo htmlspecialchars($mes); ?>
                 </option>
             <?php endforeach; ?>

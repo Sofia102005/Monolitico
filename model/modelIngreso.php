@@ -25,50 +25,50 @@ class ModeloIngreso {
     public function addIncome($month, $year, $amount) {
         try {
             if ($amount < 0) {
-                throw new Exception("El ingreso no puede ser menor a cero.");
+                throw new Exception("Error: El ingreso no puede ser menor a cero.");
             }
-    
-            if ($this->existeIngreso($month, $year)) {
-                throw new Exception("Ya existe un ingreso para este mes y año.");
+        
+            if (!$this->existeIngreso($month, $year)) {
+                $sql = "INSERT INTO reports (month, year) VALUES (:month, :year)";
+                $stmt = $this->conexion->prepare($sql);
+                $stmt->bindParam(':month', $month);
+                $stmt->bindParam(':year', $year);
+                $stmt->execute();
+                $idReport = $this->conexion->lastInsertId();
+            
+                $sql = "INSERT INTO income (value, idReport) VALUES (:amount, :idReport)";
+                $stmt = $this->conexion->prepare($sql);
+                $stmt->bindParam(':amount', $amount);
+                $stmt->bindParam(':idReport', $idReport);
+                $stmt->execute();
+                return 'nuevo';
+            } else {
+                throw new Exception("Error: Ya existe un ingreso para este mes y año.");
             }
-
-            $sql = "INSERT INTO reports (month, year) VALUES (:month, :year)";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->bindParam(':month', $month);
-            $stmt->bindParam(':year', $year);
-            $stmt->execute();
-            $idReport = $this->conexion->lastInsertId();
-    
-            $sql = "INSERT INTO income (value, idReport) VALUES (:amount, :idReport)";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->bindParam(':amount', $amount);
-            $stmt->bindParam(':idReport', $idReport);
-            $stmt->execute();
-            return 'nuevo';
         } catch (PDOException $e) {
             die("Error al agregar ingreso: " . $e->getMessage());
         } catch (Exception $e) {
-            die("Error: " . $e->getMessage());
+            echo "Error: " . $e->getMessage();
         }
     }
-
+    
     public function addOrUpdateIncome($month, $year, $amount) {
         try {
             if ($amount < 0) {
-                throw new Exception("El ingreso no puede ser menor a cero.");
+                return "Error: El ingreso no puede ser menor a cero.";
             }
-    
+            
             if ($this->existeIngreso($month, $year)) {
-                throw new Exception("Ya existe un ingreso para este mes y año.");
+                return "Error: Ya existe un ingreso para el mes $month del año $year. Por favor, actualice el ingreso existente.";
             }
-
+        
             $sql = "INSERT INTO reports (month, year) VALUES (:month, :year)";
             $stmt = $this->conexion->prepare($sql);
             $stmt->bindParam(':month', $month);
             $stmt->bindParam(':year', $year);
             $stmt->execute();
             $idReport = $this->conexion->lastInsertId();
-    
+            
             $sql = "INSERT INTO income (value, idReport) VALUES (:amount, :idReport)";
             $stmt = $this->conexion->prepare($sql);
             $stmt->bindParam(':amount', $amount);
@@ -76,9 +76,7 @@ class ModeloIngreso {
             $stmt->execute();
             return 'nuevo';
         } catch (PDOException $e) {
-            die("Error al agregar o actualizar ingreso: " . $e->getMessage());
-        } catch (Exception $e) {
-            die("Error: " . $e->getMessage());
+            return "Error al agregar o actualizar ingreso: " . $e->getMessage();
         }
     }
  
@@ -88,15 +86,18 @@ class ModeloIngreso {
                     INNER JOIN reports r ON i.idReport = r.id
                     WHERE r.month = :month AND r.year = :year";
             $stmt = $this->conexion->prepare($sql);
-            $stmt->bindParam(':month', (int) $month);
-            $stmt->bindParam(':year', (int) $year);
+            $stmt->bindParam(':month', $month);
+            $stmt->bindParam(':year', $year);
             $stmt->execute();
-            return $stmt->rowCount() > 0;
+            if ($stmt->rowCount() > 0) {
+                throw new Exception("Error: Ya existe un ingreso para este mes y año.");
+            } else {
+                return true;
+            }
         } catch (PDOException $e) {
             die("Error al verificar ingreso: " . $e->getMessage());
         }
     }
-
     public function updateIncome($idIncome, $newAmount) {
         try {
             if ($newAmount < 0) {

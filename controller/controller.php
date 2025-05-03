@@ -12,23 +12,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $amount = $_POST['amount'] ?? '';
         
         if (!empty($month) && !empty($year) && is_numeric($amount) && $amount >= 0) {
-            $existe = $modelo->existeIngreso($month, $year);
-            if ($existe) {
-                header('Location: ../index.php?status=error');
+            $resultado = $modelo->addIncome($month, $year, $amount);
+            if ($resultado === 'nuevo') {
+                header('Location: ../index.php?status=success');
             } else {
-                $resultado = $modelo->addOrUpdateIncome($month, $year, $amount);
-                if ($resultado === 'actualizado') {
-                    header('Location: ../index.php?status=updated');
-                } else {
-                    header('Location: ../index.php?status=success');
-                }
+                echo $resultado;
+                exit;
             }
         } else {
-            header('Location: ../index.php?status=error');
+            echo "Error: Los datos ingresados no son válidos.";
+            exit;
         }
         exit;
     }
-
+    }
     if ($action === 'updateIncome') {
         $idIncome = $_POST['idIncome'] ?? '';
         $amount = $_POST['amount'] ?? '';
@@ -112,4 +109,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    
     header('Location: ../index.php?status=error');
     exit;
-}
