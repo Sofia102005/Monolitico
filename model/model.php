@@ -1,7 +1,7 @@
 <?php
 require_once 'conexion.php';
 
-class Modelo {
+class ModeloIngreso {
     private $conexion;
 
     public function __construct() {

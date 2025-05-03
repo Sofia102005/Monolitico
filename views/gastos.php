@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/../model/model.php';
-$modelo = new Modelo();
+$modelo = new ModeloIngreso();
 
-// Registrar gasto
+// Registrar Ingreso
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     $accion = $_POST['accion'];
     $descripcion = $_POST['descripcion'] ?? '';
@@ -12,17 +12,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     $idGasto = $_POST['id'] ?? null;
 
     if ($accion === 'agregar' && $valor > 0 && !empty($descripcion) && !empty($mes) && !empty($anio)) {
-        $modelo->addExpense($descripcion, $valor, $mes, $anio);
+        $modelo->addBill($descripcion, $valor, 1, 1); 
     } elseif ($accion === 'modificar' && $idGasto && $valor > 0) {
-        $modelo->updateExpense($idGasto, $descripcion, $valor);
+        $modelo->updateBill($idGasto, $descripcion, $valor, 1); 
     } elseif ($accion === 'eliminar' && $idGasto) {
-        $modelo->deleteExpense($idGasto);
+        $modelo->deleteBill($idGasto);
     }
 }
 
 $gastos = [];
 if (isset($_GET['mes'], $_GET['anio'])) {
-    $gastos = $modelo->getExpenses($_GET['mes'], $_GET['anio']);
+    $gastos = $modelo->getAllIncomes(); 
 }
 ?>
 
