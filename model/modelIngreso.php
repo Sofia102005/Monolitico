@@ -9,7 +9,6 @@ class ModeloIngreso {
         $this->conexion = $db->conectar();
     }
 
-    // Obtener todos los ingresos
     public function getAllIncomes() {
         try {
             $sql = "SELECT i.id AS idIncome, r.month, r.year, i.value 
@@ -23,54 +22,81 @@ class ModeloIngreso {
         }
     }
 
-    // Agregar o actualizar un ingreso
+    public function addIncome($month, $year, $amount) {
+        try {
+            if ($amount < 0) {
+                throw new Exception("El ingreso no puede ser menor a cero.");
+            }
+    
+            if ($this->existeIngreso($month, $year)) {
+                throw new Exception("Ya existe un ingreso para este mes y año.");
+            }
+
+            $sql = "INSERT INTO reports (month, year) VALUES (:month, :year)";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':month', $month);
+            $stmt->bindParam(':year', $year);
+            $stmt->execute();
+            $idReport = $this->conexion->lastInsertId();
+    
+            $sql = "INSERT INTO income (value, idReport) VALUES (:amount, :idReport)";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':amount', $amount);
+            $stmt->bindParam(':idReport', $idReport);
+            $stmt->execute();
+            return 'nuevo';
+        } catch (PDOException $e) {
+            die("Error al agregar ingreso: " . $e->getMessage());
+        } catch (Exception $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
     public function addOrUpdateIncome($month, $year, $amount) {
         try {
             if ($amount < 0) {
                 throw new Exception("El ingreso no puede ser menor a cero.");
             }
+    
+            if ($this->existeIngreso($month, $year)) {
+                throw new Exception("Ya existe un ingreso para este mes y año.");
+            }
 
-            // Verificar si ya existe un reporte con ese mes y año
-            $sql = "SELECT id FROM reports WHERE month = :month AND year = :year";
+            $sql = "INSERT INTO reports (month, year) VALUES (:month, :year)";
             $stmt = $this->conexion->prepare($sql);
             $stmt->bindParam(':month', $month);
             $stmt->bindParam(':year', $year);
             $stmt->execute();
-            $report = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($report) {
-                // Ya existe reporte, actualizamos ingreso
-                $idReport = $report['id'];
-                $sql = "UPDATE income SET value = :amount WHERE idReport = :idReport";
-                $stmt = $this->conexion->prepare($sql);
-                $stmt->bindParam(':amount', $amount);
-                $stmt->bindParam(':idReport', $idReport);
-                $stmt->execute();
-                return 'actualizado';
-            } else {
-                // Crear nuevo reporte e ingreso
-                $sql = "INSERT INTO reports (month, year) VALUES (:month, :year)";
-                $stmt = $this->conexion->prepare($sql);
-                $stmt->bindParam(':month', $month);
-                $stmt->bindParam(':year', $year);
-                $stmt->execute();
-                $idReport = $this->conexion->lastInsertId();
-
-                $sql = "INSERT INTO income (value, idReport) VALUES (:amount, :idReport)";
-                $stmt = $this->conexion->prepare($sql);
-                $stmt->bindParam(':amount', $amount);
-                $stmt->bindParam(':idReport', $idReport);
-                $stmt->execute();
-                return 'nuevo';
-            }
+            $idReport = $this->conexion->lastInsertId();
+    
+            $sql = "INSERT INTO income (value, idReport) VALUES (:amount, :idReport)";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':amount', $amount);
+            $stmt->bindParam(':idReport', $idReport);
+            $stmt->execute();
+            return 'nuevo';
         } catch (PDOException $e) {
             die("Error al agregar o actualizar ingreso: " . $e->getMessage());
         } catch (Exception $e) {
             die("Error: " . $e->getMessage());
         }
     }
+ 
+    public function existeIngreso($month, $year) {
+        try {
+            $sql = "SELECT * FROM income i
+                    INNER JOIN reports r ON i.idReport = r.id
+                    WHERE r.month = :month AND r.year = :year";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':month', (int) $month);
+            $stmt->bindParam(':year', (int) $year);
+            $stmt->execute();
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            die("Error al verificar ingreso: " . $e->getMessage());
+        }
+    }
 
-    // Actualizar el valor de un ingreso específico
     public function updateIncome($idIncome, $newAmount) {
         try {
             if ($newAmount < 0) {
@@ -90,7 +116,6 @@ class ModeloIngreso {
         }
     }
 
-    // Eliminar un ingreso específico
     public function deleteIncome($idIncome) {
         try {
             $sql = "DELETE FROM income WHERE id = :idIncome";
@@ -103,7 +128,7 @@ class ModeloIngreso {
         }
     }
 
-    // Agregar un nuevo gasto
+    // Agregar un nuevo ingreso
     public function addBill($description, $amount, $categoryId, $reportId) {
         try {
             $sql = "INSERT INTO bills (description, value, idCategory, idReport) 
@@ -120,7 +145,7 @@ class ModeloIngreso {
         }
     }
 
-    // Actualizar un gasto
+    // Actualizar un ingreso
     public function updateBill($idBill, $description, $amount, $categoryId) {
         try {
             $sql = "UPDATE bills SET description = :description, value = :amount, idCategory = :categoryId 
@@ -137,7 +162,7 @@ class ModeloIngreso {
         }
     }
 
-    // Eliminar un gasto
+    // Eliminar un ingreso
     public function deleteBill($idBill) {
         try {
             $sql = "DELETE FROM bills WHERE id = :idBill";
@@ -151,3 +176,4 @@ class ModeloIngreso {
     }
 }
 ?>
+

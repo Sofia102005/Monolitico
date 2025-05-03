@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../model/model.php';
+require_once __DIR__ . '/../model/modelingreso.php';
 $modelo = new ModeloIngreso();
 
 // Registrar Ingreso
@@ -9,20 +9,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     $valor = $_POST['valor'] ?? 0;
     $mes = $_POST['mes'] ?? '';
     $anio = $_POST['anio'] ?? '';
-    $idGasto = $_POST['id'] ?? null;
+    $idIngreso = $_POST['id'] ?? null;
 
     if ($accion === 'agregar' && $valor > 0 && !empty($descripcion) && !empty($mes) && !empty($anio)) {
-        $modelo->addBill($descripcion, $valor, 1, 1); 
-    } elseif ($accion === 'modificar' && $idGasto && $valor > 0) {
-        $modelo->updateBill($idGasto, $descripcion, $valor, 1); 
-    } elseif ($accion === 'eliminar' && $idGasto) {
-        $modelo->deleteBill($idGasto);
+        $modelo->addIncome($mes, $anio, $valor); 
+    } elseif ($accion === 'modificar' && $idIngreso && $valor > 0) {
+        $modelo->updateIncome($idIngreso, $valor); 
+    } elseif ($accion === 'eliminar' && $idIngreso) {
+        $modelo->deleteIncome($idIngreso);
     }
 }
 
-$gastos = [];
+$ingresos = [];
 if (isset($_GET['mes'], $_GET['anio'])) {
-    $gastos = $modelo->getAllIncomes(); 
+    $ingresos = $modelo->getAllIncomes(); 
 }
 ?>
 
@@ -30,21 +30,21 @@ if (isset($_GET['mes'], $_GET['anio'])) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gastos Mensuales</title>
+    <title>Ingresos Mensuales</title>
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-    <h1>Gastos Mensuales</h1>
+    <h1>Ingresos Mensuales</h1>
 
     <form method="GET">
         <label>Mes:</label>
         <input type="text" name="mes" required>
         <label>Año:</label>
         <input type="number" name="anio" required>
-        <button type="submit">Ver Gastos</button>
+        <button type="submit">Ver Ingresos</button>
     </form>
 
-    <h2>Agregar / Modificar Gasto</h2>
+    <h2>Agregar / Modificar Ingreso</h2>
     <form method="POST">
         <input type="hidden" name="id" id="id">
         <label>Descripción:</label>
@@ -57,29 +57,30 @@ if (isset($_GET['mes'], $_GET['anio'])) {
         <button type="submit" name="accion" value="modificar">Modificar</button>
     </form>
 
-    <h2>Lista de Gastos</h2>
+    <h2>Lista de Ingresos</h2>
     <table border="1">
         <tr>
             <th>ID</th>
-            <th>Descripción</th>
+            <th>Mes</th>
+            <th>Año</th>
             <th>Valor</th>
             <th>Acciones</th>
         </tr>
-        <?php foreach ($gastos as $gasto): ?>
+        <?php foreach ($ingresos as $ingreso): ?>
         <tr>
-            <td><?= $gasto['id'] ?></td>
-            <td><?= $gasto['description'] ?></td>
-            <td><?= $gasto['value'] ?></td>
+            <td><?= $ingreso['idIncome'] ?></td>
+            <td><?= $ingreso['month'] ?></td>
+            <td><?= $ingreso['year'] ?></td>
+            <td><?= $ingreso['value'] ?></td>
             <td>
                 <form method="POST" style="display:inline;">
-                    <input type="hidden" name="id" value="<?= $gasto['id'] ?>">
-                    <input type="hidden" name="descripcion" value="<?= $gasto['description'] ?>">
-                    <input type="hidden" name="valor" value="<?= $gasto['value'] ?>">
+                    <input type="hidden" name="id" value="<?= $ingreso['idIncome'] ?>">
+                    <input type="hidden" name="valor" value="<?= $ingreso['value'] ?>">
                     <input type="hidden" name="accion" value="modificar">
                     <button type="submit">Editar</button>
                 </form>
                 <form method="POST" style="display:inline;">
-                    <input type="hidden" name="id" value="<?= $gasto['id'] ?>">
+                    <input type="hidden" name="id" value="<?= $ingreso['idIncome'] ?>">
                     <input type="hidden" name="accion" value="eliminar">
                     <button type="submit">Eliminar</button>
                 </form>

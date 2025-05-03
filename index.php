@@ -1,8 +1,8 @@
 <?php
-require_once __DIR__ . '/model/model.php';
+require_once __DIR__ . '/model/modelIngreso.php';
 $mensaje = '';
 
-$modelo = new Modelo();
+$modelo = new ModeloIngreso();
 
 if (isset($_GET['status'])) {
     switch ($_GET['status']) {
@@ -40,9 +40,8 @@ $incomes = $modelo->getAllIncomes();
         <div class="mensaje-exito"><?php echo htmlspecialchars($mensaje); ?></div>
     <?php endif; ?>
 
-    <!-- Formulario para registrar nuevo ingreso -->
     <form action="controller/controller.php" method="POST">
-        <input type="hidden" name="action" value="addIncome"> <!-- CORREGIDO -->
+        <input type="hidden" name="action" value="addIncome"> 
 
         <label for="month">Mes:</label>
         <select name="month" id="month" required>
@@ -51,7 +50,7 @@ $incomes = $modelo->getAllIncomes();
             $meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
                       "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
             foreach ($meses as $mes): ?>
-                <option value="<?php echo htmlspecialchars($mes); ?>"><?php echo htmlspecialchars($mes); ?></option>
+                <option value="<?php echo htmlspecialchars($mes); ?>" <?php if (in_array($mes, array_column($incomes, 'month'))): ?> disabled <?php endif; ?>><?php echo htmlspecialchars($mes); ?></option>
             <?php endforeach; ?>
         </select>
 

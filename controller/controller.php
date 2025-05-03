@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../model/model.php';
+require_once __DIR__ . '/../model/modelIngreso.php';
 
-$modelo = new Modelo();
+$modelo = new ModeloIngreso();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
@@ -10,13 +10,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $month = $_POST['month'] ?? '';
         $year = $_POST['year'] ?? '';
         $amount = $_POST['amount'] ?? '';
-
+        
         if (!empty($month) && !empty($year) && is_numeric($amount) && $amount >= 0) {
-            $resultado = $modelo->addOrUpdateIncome($month, $year, $amount);
-            if ($resultado === 'actualizado') {
-                header('Location: ../index.php?status=updated');
+            $existe = $modelo->existeIngreso($month, $year);
+            if ($existe) {
+                header('Location: ../index.php?status=error');
             } else {
-                header('Location: ../index.php?status=success');
+                $resultado = $modelo->addOrUpdateIncome($month, $year, $amount);
+                if ($resultado === 'actualizado') {
+                    header('Location: ../index.php?status=updated');
+                } else {
+                    header('Location: ../index.php?status=success');
+                }
             }
         } else {
             header('Location: ../index.php?status=error');
@@ -91,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Acción no reconocida
+   
     header('Location: ../index.php?status=error');
     exit;
 }

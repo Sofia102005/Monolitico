@@ -9,7 +9,7 @@ class Conexion {
     public function conectar() {
         try {
             $this->conn = new PDO("mysql:host=$this->host;dbname=$this->dbName;charset=utf8", $this->username, $this->password);
-            // Configuramos los errores para que se manejen como excepciones
+         
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $this->conn;
         } catch (PDOException $e) {
