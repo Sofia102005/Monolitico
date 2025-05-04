@@ -18,121 +18,63 @@ class ModeloIngreso {
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            die("Error al obtener ingresos: " . $e->getMessage());
+            return [];
         }
     }
 
     public function addIncome($month, $year, $amount) {
         try {
-            if ($amount < 0) {
-                throw new Exception("Error: El ingreso no puede ser menor a cero.");
-            }
-        
-            if (!$this->existeIngreso($month, $year)) {
-                $sql = "INSERT INTO reports (month, year) VALUES (:month, :year)";
-                $stmt = $this->conexion->prepare($sql);
-                $stmt->bindParam(':month', $month);
-                $stmt->bindParam(':year', $year);
-                $stmt->execute();
-                $idReport = $this->conexion->lastInsertId();
-            
-                $sql = "INSERT INTO income (value, idReport) VALUES (:amount, :idReport)";
-                $stmt = $this->conexion->prepare($sql);
-                $stmt->bindParam(':amount', $amount);
-                $stmt->bindParam(':idReport', $idReport);
-                $stmt->execute();
-                return 'nuevo';
-            } else {
-                throw new Exception("Error: Ya existe un ingreso para este mes y año.");
-            }
-        } catch (PDOException $e) {
-            die("Error al agregar ingreso: " . $e->getMessage());
-        } catch (Exception $e) {
-            echo "Error: " . $e->getMessage();
-        }
-    }
-    
-    public function addOrUpdateIncome($month, $year, $amount) {
-        try {
-            if ($amount < 0) {
-                return "Error: El ingreso no puede ser menor a cero.";
-            }
-            
-            if ($this->existeIngreso($month, $year)) {
-                return "Error: Ya existe un ingreso para el mes $month del año $year. Por favor, actualice el ingreso existente.";
-            }
-        
+            if ($amount < 0) return "error";
+            if ($this->existeIngreso($month, $year)) return "error";
+
             $sql = "INSERT INTO reports (month, year) VALUES (:month, :year)";
             $stmt = $this->conexion->prepare($sql);
             $stmt->bindParam(':month', $month);
             $stmt->bindParam(':year', $year);
             $stmt->execute();
             $idReport = $this->conexion->lastInsertId();
-            
+
             $sql = "INSERT INTO income (value, idReport) VALUES (:amount, :idReport)";
             $stmt = $this->conexion->prepare($sql);
             $stmt->bindParam(':amount', $amount);
             $stmt->bindParam(':idReport', $idReport);
             $stmt->execute();
+
             return 'nuevo';
         } catch (PDOException $e) {
-            return "Error al agregar o actualizar ingreso: " . $e->getMessage();
+            return "error";
         }
     }
- 
-    public function existeIngreso($month, $year) {
-        try {
-            $sql = "SELECT * FROM income i
-                    INNER JOIN reports r ON i.idReport = r.id
-                    WHERE r.month = :month AND r.year = :year";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->bindParam(':month', $month);
-            $stmt->bindParam(':year', $year);
-            $stmt->execute();
-            if ($stmt->rowCount() > 0) {
-                throw new Exception("Error: Ya existe un ingreso para este mes y año.");
-            } else {
-                return true;
-            }
-        } catch (PDOException $e) {
-            die("Error al verificar ingreso: " . $e->getMessage());
-        }
-    }
+
     public function updateIncome($idIncome, $newAmount) {
         try {
-            if ($newAmount < 0) {
-                throw new Exception("El ingreso no puede ser menor a cero.");
-            }
+            if ($newAmount < 0) return "error";
 
             $sql = "UPDATE income SET value = :amount WHERE id = :idIncome";
             $stmt = $this->conexion->prepare($sql);
             $stmt->bindParam(':amount', $newAmount);
             $stmt->bindParam(':idIncome', $idIncome);
             $stmt->execute();
+
             return 'actualizado';
         } catch (PDOException $e) {
-            die("Error al actualizar ingreso: " . $e->getMessage());
-        } catch (Exception $e) {
-            die("Error: " . $e->getMessage());
+            return "error";
         }
     }
 
     public function addAmount($idIncome, $amount) {
         try {
-            if ($amount < 0) {
-                throw new Exception("El ingreso no puede ser menor a cero.");
-            }
-    
+            if ($amount < 0) return "error";
+
             $sql = "UPDATE income SET value = value + :amount WHERE id = :idIncome";
             $stmt = $this->conexion->prepare($sql);
             $stmt->bindParam(':amount', $amount);
             $stmt->bindParam(':idIncome', $idIncome);
             $stmt->execute();
+
             return 'actualizado';
         } catch (PDOException $e) {
-            die("Error al agregar cantidad: " . $e->getMessage());
-        } catch (Exception $e) {
-            die("Error: " . $e->getMessage());
+            return "error";
         }
     }
 
@@ -144,56 +86,18 @@ class ModeloIngreso {
             $stmt->execute();
             return 'eliminado';
         } catch (PDOException $e) {
-            die("Error al eliminar ingreso: " . $e->getMessage());
+            return "error";
         }
     }
 
-    // Agregar un nuevo ingreso
-    public function addBill($description, $amount, $categoryId, $reportId) {
-        try {
-            $sql = "INSERT INTO bills (description, value, idCategory, idReport) 
-                    VALUES (:description, :amount, :categoryId, :reportId)";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->bindParam(':description', $description);
-            $stmt->bindParam(':amount', $amount);
-            $stmt->bindParam(':categoryId', $categoryId);
-            $stmt->bindParam(':reportId', $reportId);
-            $stmt->execute();
-            return 'nuevo';
-        } catch (PDOException $e) {
-            die("Error al agregar gasto: " . $e->getMessage());
-        }
-    }
-
-    // Actualizar un ingreso
-    public function updateBill($idBill, $description, $amount, $categoryId) {
-        try {
-            $sql = "UPDATE bills SET description = :description, value = :amount, idCategory = :categoryId 
-                    WHERE id = :idBill";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->bindParam(':description', $description);
-            $stmt->bindParam(':amount', $amount);
-            $stmt->bindParam(':categoryId', $categoryId);
-            $stmt->bindParam(':idBill', $idBill);
-            $stmt->execute();
-            return 'actualizado';
-        } catch (PDOException $e) {
-            die("Error al actualizar gasto: " . $e->getMessage());
-        }
-    }
-
-    // Eliminar un ingreso
-    public function deleteBill($idBill) {
-        try {
-            $sql = "DELETE FROM bills WHERE id = :idBill";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->bindParam(':idBill', $idBill);
-            $stmt->execute();
-            return 'eliminado';
-        } catch (PDOException $e) {
-            die("Error al eliminar gasto: " . $e->getMessage());
-        }
+    private function existeIngreso($month, $year) {
+        $sql = "SELECT i.id FROM income i
+                INNER JOIN reports r ON i.idReport = r.id
+                WHERE r.month = :month AND r.year = :year";
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->bindParam(':month', $month);
+        $stmt->bindParam(':year', $year);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
     }
 }
-?>
-

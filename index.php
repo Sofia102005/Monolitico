@@ -3,10 +3,8 @@ require_once __DIR__ . '/model/modelIngreso.php';
 require_once __DIR__ . '/model/modelgastos.php';
 
 $mensaje = '';
-
 $modelo = new ModeloIngreso();
 $modeloGastos = new ModeloGasto();
-
 
 if (isset($_GET['status'])) {
     switch ($_GET['status']) {
@@ -28,33 +26,20 @@ if (isset($_GET['status'])) {
 $incomes = $modelo->getAllIncomes();
 $bills = $modeloGastos->getAllBills();
 $meses = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre"
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
 ];
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control de Ingresos y Gastos</title>
     <link rel="stylesheet" href="estilos.css">
 </head>
-
 <body>
-
     <h1>Registrar, Modificar o Eliminar Ingresos</h1>
 
     <?php if ($mensaje): ?>
@@ -68,16 +53,7 @@ $meses = [
         <select name="month" id="month" required>
             <option value="">Seleccione un mes</option>
             <?php foreach ($meses as $mes): ?>
-                <?php $disabled = false; ?>
-                <?php foreach ($incomes as $income): ?>
-                    <?php if ($income['month'] == $mes && $income['year'] == $_POST['year']): ?>
-                        <?php $disabled = true; ?>
-                        <?php break; ?>
-                    <?php endif; ?>
-                <?php endforeach; ?>
-                <option value="<?php echo htmlspecialchars($mes); ?>" <?php if ($disabled): ?> disabled <?php endif; ?>>
-                    <?php echo htmlspecialchars($mes); ?>
-                </option>
+                <option value="<?php echo htmlspecialchars($mes); ?>"><?php echo htmlspecialchars($mes); ?></option>
             <?php endforeach; ?>
         </select>
 
@@ -118,7 +94,7 @@ $meses = [
                         <form action="controller/controller.php" method="POST" style="display:inline;">
                             <input type="hidden" name="action" value="addAmount">
                             <input type="hidden" name="idIncome" value="<?php echo $income['idIncome']; ?>">
-                            <input type="number" name="amount" value="5" style="width: 50px;">
+                            <input type="number" name="amount" value="5" style="width: 50px;" step="0.01">
                             <button type="submit">Sumar</button>
                         </form>
 
@@ -128,7 +104,6 @@ $meses = [
                             <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este ingreso?');">Eliminar</button>
                         </form>
 
-
                         <form action="Views/viewGastos.php">
                             <button type="submit">Gastos</button>
                         </form>
@@ -137,10 +112,5 @@ $meses = [
             <?php endforeach; ?>
         </tbody>
     </table>
-
-    <hr>
-
-
 </body>
-
 </html>

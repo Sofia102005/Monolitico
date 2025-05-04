@@ -5,107 +5,44 @@ $modelo = new ModeloIngreso();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
+    $redirect = '../index.php?status=';
 
-    if ($action === 'addIncome') {
-        $month = $_POST['month'] ?? '';
-        $year = $_POST['year'] ?? '';
-        $amount = $_POST['amount'] ?? '';
-        
-        if (!empty($month) && !empty($year) && is_numeric($amount) && $amount >= 0) {
-            $resultado = $modelo->addIncome($month, $year, $amount);
-            if ($resultado === 'nuevo') {
-                header('Location: ../index.php?status=success');
-            } else {
-                echo $resultado;
-                exit;
-            }
-        } else {
-            echo "Error: Los datos ingresados no son válidos.";
-            exit;
+    try {
+        switch ($action) {
+            case 'addIncome':
+                $month = $_POST['month'];
+                $year = $_POST['year'];
+                $amount = floatval($_POST['amount']);
+                $resultado = $modelo->addIncome($month, $year, $amount);
+                header("Location: $redirect" . ($resultado === 'nuevo' ? 'success' : 'error'));
+                break;
+
+            case 'updateIncome':
+                $idIncome = $_POST['idIncome'];
+                $amount = floatval($_POST['amount']);
+                $resultado = $modelo->updateIncome($idIncome, $amount);
+                header("Location: $redirect" . ($resultado === 'actualizado' ? 'updated' : 'error'));
+                break;
+
+            case 'addAmount':
+                $idIncome = $_POST['idIncome'];
+                $amount = floatval($_POST['amount']);
+                $resultado = $modelo->addAmount($idIncome, $amount);
+                header("Location: $redirect" . ($resultado === 'actualizado' ? 'updated' : 'error'));
+                break;
+
+            case 'deleteIncome':
+                $idIncome = $_POST['idIncome'];
+                $resultado = $modelo->deleteIncome($idIncome);
+                header("Location: $redirect" . ($resultado === 'eliminado' ? 'deleted' : 'error'));
+                break;
+
+            default:
+                header("Location: $redirect" . 'error');
+                break;
         }
-        exit;
+    } catch (Exception $e) {
+        header("Location: $redirect" . 'error');
     }
-    }
-    if ($action === 'updateIncome') {
-        $idIncome = $_POST['idIncome'] ?? '';
-        $amount = $_POST['amount'] ?? '';
-
-        if (is_numeric($idIncome) && is_numeric($amount) && $amount >= 0) {
-            $modelo->updateIncome($idIncome, $amount);
-            header('Location: ../index.php?status=updated');
-        } else {
-            header('Location: ../index.php?status=error');
-        }
-        exit;
-    }
-
-    if ($action === 'deleteIncome') {
-        $idIncome = $_POST['idIncome'] ?? '';
-
-        if (is_numeric($idIncome)) {
-            $modelo->deleteIncome($idIncome);
-            header('Location: ../index.php?status=deleted');
-        } else {
-            header('Location: ../index.php?status=error');
-        }
-        exit;
-    }
-
-    if ($action === 'addAmount') {
-        $idIncome = $_POST['idIncome'] ?? '';
-        $amount = $_POST['amount'] ?? '';
-
-        if (is_numeric($idIncome) && is_numeric($amount) && $amount >= 0) {
-            $modelo->addAmount($idIncome, $amount);
-            header('Location: ../index.php?status=updated');
-        } else {
-            header('Location: ../index.php?status=error');
-        }
-        exit;
-    }
-
-    if ($action === 'addBill') {
-        $description = $_POST['description'] ?? '';
-        $amount = $_POST['amount'] ?? 0;
-        $categoryId = $_POST['categoryId'] ?? 0;
-        $reportId = $_POST['reportId'] ?? 0;
-
-        if (!empty($description) && is_numeric($amount) && is_numeric($categoryId) && is_numeric($reportId)) {
-            $modelo->addBill($description, $amount, $categoryId, $reportId);
-            header('Location: ../index.php?status=success');
-        } else {
-            header('Location: ../index.php?status=error');
-        }
-        exit;
-    }
-
-    if ($action === 'updateBill') {
-        $id = $_POST['id'] ?? 0;
-        $description = $_POST['description'] ?? '';
-        $amount = $_POST['amount'] ?? 0;
-        $categoryId = $_POST['categoryId'] ?? 0;
-
-        if (is_numeric($id) && !empty($description) && is_numeric($amount) && is_numeric($categoryId)) {
-            $modelo->updateBill($id, $description, $amount, $categoryId);
-            header('Location: ../index.php?status=updated');
-        } else {
-            header('Location: ../index.php?status=error');
-        }
-        exit;
-    }
-
-    if ($action === 'deleteBill') {
-        $id = $_POST['id'] ?? 0;
-
-        if (is_numeric($id)) {
-            $modelo->deleteBill($id);
-            header('Location: ../index.php?status=deleted');
-        } else {
-            header('Location: ../index.php?status=error');
-        }
-        exit;
-    }
-
-   
-    header('Location: ../index.php?status=error');
     exit;
+}
