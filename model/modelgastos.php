@@ -12,24 +12,7 @@ class ModeloGasto {
    
     public function addBill($amount, $categoryId, $month, $year) {
         try {
-           
-            $sql = "SELECT id FROM reports WHERE month = :month AND year = :year";
-            $stmt = $this->conexion->prepare($sql);
-            $stmt->bindParam(':month', $month);
-            $stmt->bindParam(':year', $year);
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-                $idReport = $stmt->fetch(PDO::FETCH_ASSOC)['id'];
-            } else {
-                $sql = "INSERT INTO reports (month, year) VALUES (:month, :year)";
-                $stmt = $this->conexion->prepare($sql);
-                $stmt->bindParam(':month', $month);
-                $stmt->bindParam(':year', $year);
-                $stmt->execute();
-                $idReport = $this->conexion->lastInsertId();
-            }
-
+            // ...
             // Insertar gasto
             $sql = "INSERT INTO bills (value, idCategory, idReport) 
                     VALUES (:amount, :categoryId, :idReport)";
@@ -38,13 +21,16 @@ class ModeloGasto {
             $stmt->bindParam(':categoryId', $categoryId);
             $stmt->bindParam(':idReport', $idReport);
             $stmt->execute();
-
+            
+            // Actualizar sesión con el mes y año del gasto recién insertado
+            $_SESSION['month'] = $month;
+            $_SESSION['year'] = $year;
+            
             return 'nuevo';
         } catch (PDOException $e) {
             die("Error al agregar gasto: " . $e->getMessage());
         }
     }
-
     /**
      * Actualiza un gasto existente.
      */
@@ -81,6 +67,30 @@ class ModeloGasto {
         }
     }
 
+    public function getCategorias() {
+        try {
+            $sql = "SELECT * FROM categories";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->execute();
+    
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            die("Error al obtener categorías: " . $e->getMessage());
+        }
+    }
+
+    public function getBillsByMonth($month, $year) {
+        try {
+            $sql = "SELECT * FROM bills WHERE idReport IN (SELECT id FROM reports WHERE month = :month AND year = :year)";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':month', $month);
+            $stmt->bindParam(':year', $year);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            die("Error al obtener gastos: " . $e->getMessage());
+        }
+    }
 
     public function getAllBills() {
         try {

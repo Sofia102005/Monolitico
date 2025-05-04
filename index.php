@@ -26,19 +26,31 @@ if (isset($_GET['status'])) {
 $incomes = $modelo->getAllIncomes();
 $bills = $modeloGastos->getAllBills();
 $meses = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre"
 ];
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control de Ingresos y Gastos</title>
     <link rel="stylesheet" href="estilos.css">
 </head>
+
 <body>
     <h1>Registrar, Modificar o Eliminar Ingresos</h1>
 
@@ -104,7 +116,7 @@ $meses = [
                             <button type="submit" onclick="return confirm('¿Estás seguro de eliminar este ingreso?');">Eliminar</button>
                         </form>
 
-                        <form action="Views/viewGastos.php">
+                        <form action="Views/viewGastos.php?mes=<?php echo htmlspecialchars($income['month']); ?>&anio=<?php echo htmlspecialchars($income['year']); ?>">
                             <button type="submit">Gastos</button>
                         </form>
                     </td>
@@ -113,4 +125,5 @@ $meses = [
         </tbody>
     </table>
 </body>
+
 </html>

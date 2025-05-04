@@ -1,8 +1,10 @@
 <?php
-require_once __DIR__ . '/model/modelGastos.php';
+require_once __DIR__ . '../model/modelGastos.php';
 
 $modelo = new ModeloGasto();
 $bills = $modelo->getAllBills();
+
+$categorias = $modelo->getCategorias(); // Obtener las categorías
 
 $mensaje = '';
 if (isset($_GET['status'])) {
@@ -36,8 +38,13 @@ if (isset($_GET['status'])) {
         <label for="amount">Valor (€):</label>
         <input type="number" name="amount" step="0.01" required>
 
-        <label for="categoryId">Categoría (ID):</label>
-        <input type="number" name="categoryId" required>
+        <label for="categoryId">Categoría:</label>
+        <select name="categoryId" required>
+            <option value="">Seleccione una categoría</option>
+            <?php foreach ($categorias as $categoria): ?>
+                <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['name']) ?></option>
+            <?php endforeach; ?>
+        </select>
 
         <label for="month">Mes:</label>
         <input type="number" name="month" min="1" max="12" required>
@@ -73,11 +80,15 @@ if (isset($_GET['status'])) {
                             <input type="hidden" name="action" value="updateBill">
                             <input type="hidden" name="idBill" value="<?= $bill['idBill'] ?>">
                             <input type="number" name="amount" placeholder="Nuevo valor" step="0.01" required>
-                            <input type="number" name="categoryId" placeholder="Nueva categoría" required>
+                            <select name="categoryId" required>
+                                <option value="">Seleccione una categoría</option>
+                                <?php foreach ($categorias as $categoria): ?>
+                                    <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['name']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
                             <button type="submit">Actualizar</button>
                         </form>
 
-                        <!-- Formulario de eliminación -->
                         <form action="controller/controllerGastos.php" method="POST" style="display:inline;">
                             <input type="hidden" name="action" value="deleteBill">
                             <input type="hidden" name="idBill" value="<?= $bill['idBill'] ?>">

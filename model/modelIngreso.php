@@ -90,7 +90,7 @@ class ModeloIngreso {
         }
     }
 
-    private function existeIngreso($month, $year) {
+    public function existeIngreso($month, $year) {
         $sql = "SELECT i.id FROM income i
                 INNER JOIN reports r ON i.idReport = r.id
                 WHERE r.month = :month AND r.year = :year";
