@@ -112,4 +112,18 @@ class ModeloGasto {
             die("Error al obtener gastos: " . $e->getMessage());
         }
     }
+
+    public function addCategory($name, $percentage) {
+        try {
+            $sql = "INSERT INTO categories (name, percentage) VALUES (:name, :percentage)";
+            $stmt = $this->conexion->prepare($sql);
+            $stmt->bindParam(':name', $name);
+            $stmt->bindParam(':percentage', $percentage);
+            $stmt->execute();
+
+            return 'nuevo';
+        } catch (PDOException $e) {
+            die("Error al agregar categoría: " . $e->getMessage());
+        }
+    }
 }

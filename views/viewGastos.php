@@ -39,21 +39,18 @@ $bills = $modeloGasto->getBillsByMonth($month, $year);
 <body>
     <h1>Registrar, Modificar o Eliminar Gastos</h1>
 
+    <h2>Registrar Categoría</h2>
+
     <form action="../controller/controllerGastos.php" method="POST">
-        <input type="hidden" name="action" value="addBill">
+        <input type="hidden" name="action" value="addCategory">
 
-        <label for="amount_bill">Gasto (Valor):</label>
-        <input type="number" name="amount" id="amount_bill" required min="0" step="0.01">
+        <label for="category_name">Nombre de la categoría:</label>
+        <input type="text" name="name" id="category_name" required>
 
-        <label for="category">Categoría:</label> <!--Toca corregir esto, solo se debe agregar un porcentaje para que este porcentaje sea el que se muestre y reste de los ingresos-->
-        <select name="categoryId" id="category" required>
-            <option value="">Porcentaje</option> 
-            <?php foreach ($categorias as $categoria): ?> 
-                <option value="<?= $categoria['id']; ?>"><?= htmlspecialchars($categoria['name']); ?></option>
-            <?php endforeach; ?>
-        </select>
+        <label for="category_percentage">Porcentaje de la categoría:</label>
+        <input type="number" name="percentage" id="category_percentage" required min="0" max="100" step="0.01">
 
-        <button type="submit">Guardar gasto</button>
+        <button type="submit">Guardar Categoria de Gasto</button>
     </form>
 
     <h2>Historial de Gastos para el mes de <?php echo htmlspecialchars($_SESSION['month'] ?? ''); ?> del año <?php echo htmlspecialchars($_SESSION['year'] ?? ''); ?></h2>

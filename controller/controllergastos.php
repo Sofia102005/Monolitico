@@ -113,7 +113,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         header('Location: ../gastos.php?status=error');
                     }
                     break;
-        
+
+                case 'addCategory':
+                    $name = $_POST['name'] ?? '';
+                    $percentage = $_POST['percentage'] ?? '';
+
+                    if (!empty($name) && is_numeric($percentage) && $percentage >= 0 && $percentage <= 100) {
+                        $modeloGasto->addCategory($name, $percentage);
+                        header('Location: ../gastos.php?status=success');
+                    } else {
+                        header('Location: ../gastos.php?status=error');
+                    }
+                    break;
+
                 // Acción no válida
                 default:
                     header('Location: ../index.php?status=error');
