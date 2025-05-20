@@ -4,6 +4,7 @@ namespace app\controller;
 
 use app\model\entities\Incomes;
 
+
 class IncomeController
 {
 
@@ -28,6 +29,6 @@ class IncomeController
         $income->set('id', $request['idInput']);
         $income->set('value', $request['valueInput']);
         $income->set('idReport', $request['idReportInput']);
-        return $person->update();
+        return $income->update();
     }
 }

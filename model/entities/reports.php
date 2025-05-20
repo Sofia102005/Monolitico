@@ -8,7 +8,7 @@ class Reports extends Entity
 {
     protected $id = "";
     protected $month = "";
-    protected $year = "";
+    protected $year = null;
 
     public function all()
     {
@@ -31,8 +31,8 @@ class Reports extends Entity
 
     public function save()
     {
-        $sql = "insert into personas (month,year) values ";
-        $sql .= "('" . $this->month . "','" . $this->year . ")";
+        $sql = "insert into reports (month,year) values ";
+        $sql .= "('" . $this->month . "','" . $this->year . "')";
         $conex = new Conexion();
         $resultDb = $conex->execSQL($sql);
         $conex->close();

@@ -16,9 +16,9 @@ class ReportsController
 
     public function saveNewReports($request)
     {
-        $person = new Reports();
-        $person->set('month', $request['monthInput']);
-        $person->set('year', $request['yearInput']);
-        return $person->save();
+        $report = new Reports();
+        $report->set('month', $request['monthInput']);
+        $report->set('year', $request['yearInput']);
+        return $report->save();
     }
 }

@@ -4,11 +4,12 @@ namespace app\model\entities;
 
 use app\model\conexionDB\Conexion;
 
+
 class Incomes extends Entity
 {
     protected $id = null;
-    protected $value = "";
-    protected $idReport = "";
+    protected $values = null;
+    protected $idReport = null;
 
     public function all()
     {
@@ -33,7 +34,7 @@ class Incomes extends Entity
     public function save()
     {
         $sql = "insert into income (values,idReport) values ";
-        $sql .= "('" . $this->values . "','" . $this->idReport . ")";
+        $sql .= "('" . $this->values . "','" . $this->idReport . "')";
         $conex = new Conexion();
         $resultDb = $conex->execSQL($sql);
         $conex->close();
@@ -43,7 +44,7 @@ class Incomes extends Entity
     public function update()
     {
         $sql = "update income set ";
-        $sql .= "value='" . $this->value . "',";
+        $sql .= "values='" . $this->value . "',";
         $sql .= "idReport='" . $this->idReport . "',";
         $sql .= " where id=" . $this->id;
         $conex = new Conexion();

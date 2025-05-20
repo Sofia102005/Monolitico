@@ -9,10 +9,18 @@ include '../../controller/reportsController.php';
 use app\controller\incomeController;
 use app\controller\reportsController;
 
-$request = $_POST;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $request = $_POST;
 
-$controller = new ReportsController();
-$controller->saveNewReports($request);
+    $controller1 = new reportsController();
+    $idReport = $controller1->saveNewReports($request); // Se guarda el reporte y obtienes el ID
+
+    $request['idReportInput'] = $idReport; // Lo agrega al array que irá a saveNewIncome
+
+    $controller = new incomeController();
+    $controller->saveNewIncome($request); // Con idReport válido
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -37,9 +45,10 @@ $controller->saveNewReports($request);
             <label>value</label>
             <input type="number" name="valueInput" required>
         </div>
+        <input type="hidden" name="idReportInput" >
         <div>
             <label>month</label>
-            <input type="text" name="monthInput" required>
+            <input type="text" name="monthInput" pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ\s]+" title="Solo letras permitidas" required>
         </div>
         <div>
             <label>year</label>

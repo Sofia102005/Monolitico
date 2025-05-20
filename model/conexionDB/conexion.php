@@ -9,7 +9,7 @@ class Conexion {
     private $dbName = "proyecto_1_db";
     private $username = "root";
     private $password = "";
-    private $conn;
+    private $conn=null;
 
     public function __construct() {
         $this->conn = new mysqli($this->host,$this->username,$this->password,$this->dbName);
