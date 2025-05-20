@@ -1,3 +1,4 @@
+
 <?php
 $month = $_GET['month'] ?? '';
 $year = $_GET['year'] ?? '';
@@ -17,6 +18,8 @@ require_once dirname(__DIR__) . '/model/modelgastos.php';
 require_once '../controller/controllerGastos.php';
 
 $modeloGasto = new ModeloGasto();
+
+require_once '../controller/controller.php';
 
 $categorias = $modeloGasto->getCategorias();
 $month = $_SESSION['month'] ?? '';
@@ -39,18 +42,22 @@ $bills = $modeloGasto->getBillsByMonth($month, $year);
 <body>
     <h1>Registrar, Modificar o Eliminar Gastos</h1>
 
-    <h2>Registrar Categoría</h2>
+    <h2>Registrar Gastos</h2>
 
-    <form action="../controller/controllerGastos.php" method="POST">
+    <form action="" method="POST">
+
         <input type="hidden" name="action" value="addCategory">
 
-        <label for="category_name">Nombre de la categoría:</label>
-        <input type="text" name="name" id="category_name" required>
+        <label for=""></label>
+        <input type="text" >
 
-        <label for="category_percentage">Porcentaje de la categoría:</label>
-        <input type="number" name="percentage" id="category_percentage" required min="0" max="100" step="0.01">
+        <label for="">Nombre de la Gastos</label>
+        <input type="text" name="name" required>
 
-        <button type="submit">Guardar Categoria de Gasto</button>
+        <label for="">Porcentaje del Gasto:</label>
+        <input type="number" name="percentage" min="1" max="100" step="1"required >
+
+        <button type="submit">Guardar Gasto</button>
     </form>
 
     <h2>Historial de Gastos para el mes de <?php echo htmlspecialchars($_SESSION['month'] ?? ''); ?> del año <?php echo htmlspecialchars($_SESSION['year'] ?? ''); ?></h2>
@@ -71,8 +78,8 @@ $bills = $modeloGasto->getBillsByMonth($month, $year);
                     <td>$<?php echo number_format($bill['value'], 2, ',', '.'); ?></td>
                     <td>
                         <form action="../controller/controllerGastos.php" method="POST">
-                            <input type="hidden" name="action" value="updateBill">
-                            <input type="hidden" name="idBill" value="<?php echo $bill['idBill']; ?>">
+                            <input type="hidden" name="action">
+                            <input type="hidden" name="">
                             <input type="number" name="amount" placeholder="Nuevo valor" required step="0.01">
                             <select name="categoryId" required>
                                 <option value="">Seleccione una categoría</option>

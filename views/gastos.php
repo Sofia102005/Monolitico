@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '../model/modelGastos.php';
+require_once '../model/modelgastos.php';
 
 $modelo = new ModeloGasto();
 $bills = $modelo->getAllBills();
@@ -29,7 +29,7 @@ if (isset($_GET['status'])) {
     <h1>Registrar o Gestionar Gastos</h1>
 
     <?php if ($mensaje): ?>
-        <div class="mensaje-exito"><?= htmlspecialchars($mensaje) ?></div>
+        <div class="mensaje-exito"><?php echo $mensaje ?></div>
     <?php endif; ?>
 
     <form action="controller/controllerGastos.php" method="POST">
@@ -78,7 +78,7 @@ if (isset($_GET['status'])) {
                         <!-- Formulario de actualización -->
                         <form action="controller/controllerGastos.php" method="POST" style="display:inline;">
                             <input type="hidden" name="action" value="updateBill">
-                            <input type="hidden" name="idBill" value="<?= $bill['idBill'] ?>">
+                            <input type="hidden" name="idBill" value="<?php echo $bill['idBill'] ?>">
                             <input type="number" name="amount" placeholder="Nuevo valor" step="0.01" required>
                             <select name="categoryId" required>
                                 <option value="">Seleccione una categoría</option>
