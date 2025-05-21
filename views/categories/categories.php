@@ -19,38 +19,39 @@ $categories = $controller->queryAllCategories();
 </head>
 <body>
 
-<h1 style="text-align:center;">Categorías de Gasto</h1>
-<br>
+<h1>Categorías de Gasto</h1>
 
-<table>
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Porcentaje</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if (!empty($categories)) : ?>
-            <?php foreach ($categories as $category): ?>
-                <tr>
-                    <td><?= htmlspecialchars($category->get('name')) ?></td>
-                    <td><?= htmlspecialchars($category->get('percentage')) ?>%</td>
-                    <td>
-                        <a class="boton" href="form.php?id=<?= $category->get('id') ?>">Modificar</a>
-                        <a class="boton" href="deleteCategory.php?id=<?= $category->get('id') ?>" onclick="return confirm('¿Seguro que deseas eliminar esta categoría?')">Eliminar</a>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
+<div class="tabla-container">
+    <table class="tabla-estilizada">
+        <thead>
             <tr>
-                <td colspan="3">No hay categorías registradas.</td>
+                <th>Nombre</th>
+                <th>Porcentaje</th>
+                <th>Acciones</th>
             </tr>
-        <?php endif; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php if (!empty($categories)) : ?>
+                <?php foreach ($categories as $category): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($category->get('name')) ?></td>
+                        <td><?= htmlspecialchars($category->get('percentage')) ?>%</td>
+                        <td>
+                            <a class="boton boton-tabla" href="form.php?id=<?= $category->get('id') ?>">Modificar</a>
+                            <a class="boton boton-tabla" href="deleteCategory.php?id=<?= $category->get('id') ?>" onclick="return confirm('¿Seguro que deseas eliminar esta categoría?')">Eliminar</a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="3">No hay categorías registradas.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
 
-<div style="text-align: center; margin-top: 20px;">
+<div class="botones-container">
     <a href="form.php" class="boton">Crear Categoría</a>
     <a href="../../index.php" class="boton">Volver al Inicio</a>
 </div>
