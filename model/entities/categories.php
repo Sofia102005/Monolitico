@@ -2,9 +2,9 @@
 
 namespace app\model\entities;
 
-use app\model\conexionDB\Conexion ;
+use app\model\conexionDB\Conexion;
 
-class categories extends Entity
+class Categories extends Entity
 {
     protected $id = "";
     protected $name = "";
@@ -12,13 +12,13 @@ class categories extends Entity
 
     public function all()
     {
-        $sql = "select * from categories";
+        $sql = "SELECT * FROM categories";
         $conex = new Conexion();
         $resultDb = $conex->execSQL($sql);
         $categories = [];
         if ($resultDb->num_rows > 0) {
             while ($rowDb = $resultDb->fetch_assoc()) {
-                $category = new categories();
+                $category = new Categories();
                 $category->set('id', $rowDb['id']);
                 $category->set('name', $rowDb['name']);
                 $category->set('percentage', $rowDb['percentage']);
@@ -26,34 +26,33 @@ class categories extends Entity
             }
         }
         $conex->close();
-        return $category;
+        return $categories; 
     }
 
     public function save()
     {
         $sql = "INSERT INTO categories (name, percentage) VALUES ('" . $this->name . "', '" . $this->percentage . "')";
         $conex = new Conexion();
-        
-        $resultDb = $conex->execSQL($sql);
-            $conex->close();
-            return $resultDb;
-    }
-    
-    public function update()
-    {
-        $sql = "UPDATE categories SET name='" . $this->name . "', percentaje=". $this->percentage." . WHERE id=" . $this->id;
-        $conex = new conexion();
         $resultDb = $conex->execSQL($sql);
         $conex->close();
         return $resultDb;
     }
-    public function delete()
+
+    public function update()
     {
-        $sql = "delete from categories where id=" . $this->id;
-        $conecction = new conexion();
-        $resultDB = $conecction->execSQL($sql);
-        $conecction->close();
-        return $resultDB;
+        $sql = "UPDATE categories SET name='" . $this->name . "', percentage=" . $this->percentage . " WHERE id=" . $this->id;
+        $conex = new Conexion();
+        $resultDb = $conex->execSQL($sql);
+        $conex->close();
+        return $resultDb;
     }
 
+    public function delete()
+    {
+        $sql = "DELETE FROM categories WHERE id=" . $this->id;
+        $conex = new Conexion();
+        $resultDb = $conex->execSQL($sql);
+        $conex->close();
+        return $resultDb;
+    }
 }

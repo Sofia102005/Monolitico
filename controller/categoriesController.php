@@ -13,20 +13,20 @@ class CategoriesController
         return $category->all();
     }
 
-    public function createCategory($name, $percentage)
+    public function saveNewCategory(array $request)
     {
         $category = new Categories();
-        $category->set('name', $name);
-        $category->set('percentage', $percentage);
+        $category->set('name', $request['nameInput']);
+        $category->set('percentage', $request['percentageInput']);
         return $category->save();
     }
 
-    public function updateCategory($id, $name, $percentage)
+    public function updateCategory(array $request)
     {
         $category = new Categories();
-        $category->set('id', $id);
-        $category->set('name', $name);
-        $category->set('percentage', $percentage);
+        $category->set('id', $request['idInput']);
+        $category->set('name', $request['nameInput']);
+        $category->set('percentage', $request['percentageInput']);
         return $category->update();
     }
 

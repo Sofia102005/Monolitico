@@ -1,13 +1,17 @@
 <?php
-require_once '../model/entities/ModeloGastos';
-require_once '../model/dao/DAOGastos.php';
-require_once '../model/dao/DAOGastos.php';
-require_once '../model/dao/DAOGastos.php';
 
-$modelo = new ModeloGasto();
-$bills = $modelo->getAllBills();
+require_once __DIR__ . '/../model/entities/ModeloGasto.php';
+require_once __DIR__ . '/../controller/CategoriesController.php';
 
-$categorias = $modelo->getCategorias(); // Obtener las categorías
+use app\model\entities\ModeloGasto;
+use app\controller\CategoriesController;
+use app\model\conexionDB\Conexion;
+
+$modeloGasto = new ModeloGasto();
+$bills = $modeloGasto->getAllBills();
+
+$categoriesController = new CategoriesController();
+$categorias = $categoriesController->queryAllCategories();
 
 $mensaje = '';
 if (isset($_GET['status'])) {
@@ -32,10 +36,10 @@ if (isset($_GET['status'])) {
     <h1>Registrar o Gestionar Gastos</h1>
 
     <?php if ($mensaje): ?>
-        <div class="mensaje-exito"><?php echo $mensaje ?></div>
+        <div class="mensaje-exito"><?= htmlspecialchars($mensaje) ?></div>
     <?php endif; ?>
 
-    <form action="controller/controllerGastos.php" method="POST">
+    <form action="../controller/controllerGastos.php" method="POST">
         <input type="hidden" name="action" value="addBill">
 
         <label for="amount">Valor (€):</label>
@@ -45,7 +49,7 @@ if (isset($_GET['status'])) {
         <select name="categoryId" required>
             <option value="">Seleccione una categoría</option>
             <?php foreach ($categorias as $categoria): ?>
-                <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['name']) ?></option>
+                <option value="<?= $categoria->get('id') ?>"><?= htmlspecialchars($categoria->get('name')) ?></option>
             <?php endforeach; ?>
         </select>
 
@@ -78,21 +82,25 @@ if (isset($_GET['status'])) {
                     <td><?= htmlspecialchars($bill['category']) ?></td>
                     <td>€<?= number_format($bill['value'], 2, ',', '.') ?></td>
                     <td>
-                        <!-- Formulario de actualización -->
-                        <form action="controller/controllerGastos.php" method="POST" style="display:inline;">
+                        <!-- Actualizar -->
+                        <form action="../controller/controllerGastos.php" method="POST" style="display:inline;">
                             <input type="hidden" name="action" value="updateBill">
-                            <input type="hidden" name="idBill" value="<?php echo $bill['idBill'] ?>">
+                            <input type="hidden" name="idBill" value="<?= $bill['idBill'] ?>">
+
                             <input type="number" name="amount" placeholder="Nuevo valor" step="0.01" required>
+
                             <select name="categoryId" required>
                                 <option value="">Seleccione una categoría</option>
                                 <?php foreach ($categorias as $categoria): ?>
-                                    <option value="<?= $categoria['id'] ?>"><?= htmlspecialchars($categoria['name']) ?></option>
+                                    <option value="<?= $categoria->get('id') ?>"><?= htmlspecialchars($categoria->get('name')) ?></option>
                                 <?php endforeach; ?>
                             </select>
+
                             <button type="submit">Actualizar</button>
                         </form>
 
-                        <form action="controller/controllerGastos.php" method="POST" style="display:inline;">
+                        <!-- Eliminar -->
+                        <form action="../controller/controllerGastos.php" method="POST" style="display:inline;">
                             <input type="hidden" name="action" value="deleteBill">
                             <input type="hidden" name="idBill" value="<?= $bill['idBill'] ?>">
                             <button type="submit" onclick="return confirm('¿Eliminar este gasto?')">Eliminar</button>
