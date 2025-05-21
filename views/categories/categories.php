@@ -1,13 +1,13 @@
 <?php
 include '../../model/conexionDB/conexion.php';
 include '../../model/entities/entity.php';
-include '../../model/entities/income.php';
-include '../../controller/incomeController.php';
+include '../../model/entities/categories.php';
+include '../../controller/categoriesController.php';
 
-use app\controller\incomeController;
+use app\controller\categoriesController;
 
-$controller = new incomeController();
-$incomes = $controller->queryAllIncome();
+$controller = new categoriesController();
+$categories = $controller->queryAllCategories();
 
 ?>
 <!DOCTYPE html>
@@ -16,31 +16,29 @@ $incomes = $controller->queryAllIncome();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Income</title>
+    <title>categories</title>
 </head>
 
 <body>
-    <h1>Income</h1>
+    <h1>Categories</h1>
     <br>
 
     <table>
         <thead>
             <tr>
-                <th>value</th>
-                <th>month</th>
-                <th>year</th>
+                <th>name</th>
+                <th>percentage</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             <?php
-            foreach ($incomes as $income) {
+            foreach ($categories as $category) {
                 echo '<tr>';
-                echo '  <td>' . $income->get('value') . '</td>';
-                echo '  <td>' . $income->get('month') . '</td>';
-                echo '  <td>' . $income->get('year') . '</td>';
+                echo '  <td>' . $category->get('name') . '</td>';
+                echo '  <td>' . $category->get('percentage') . '</td>';
                 echo '  <td>';
-                echo '      <a href="form.php ? id=' . $income->get('id') . '">Modificar</a>';
+                echo '      <a href="form.php ? id=' . $category->get('id') . '">Modificar</a>';
                 echo '       ';
                 echo '  </td>';
                 echo '</tr>';

@@ -117,6 +117,64 @@ table tr:hover {
   transition: background 0.2s ease;
 }
 
+/* Estilo para el formulario de agregar gasto */
+.form-agregar-gasto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-agregar-gasto input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.form-agregar-gasto select {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+/* Estilo para el formulario de actualizar gasto */
+.form-actualizar-gasto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-actualizar-gasto input {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.form-actualizar-gasto select {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   form, .mensaje-exito, table {

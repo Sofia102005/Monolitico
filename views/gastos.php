@@ -1,5 +1,8 @@
 <?php
-require_once '../model/modelgastos.php';
+require_once '../model/entities/ModeloGastos';
+require_once '../model/dao/DAOGastos.php';
+require_once '../model/dao/DAOGastos.php';
+require_once '../model/dao/DAOGastos.php';
 
 $modelo = new ModeloGasto();
 $bills = $modelo->getAllBills();
@@ -23,7 +26,7 @@ if (isset($_GET['status'])) {
 <head>
     <meta charset="UTF-8">
     <title>Reporte de Gastos</title>
-    <link rel="stylesheet" href="estilos.css">
+    <link rel="stylesheet" href="../estilos.css">
 </head>
 <body>
     <h1>Registrar o Gestionar Gastos</h1>

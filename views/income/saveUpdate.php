@@ -8,28 +8,45 @@ include '../../controller/reportsController.php';
 use app\controller\incomeController;
 use app\controller\reportsController;
 
-$controller = new incomeController();
+$request = $_POST;
+$controllerIncome = new incomeController();
+$controllerReport = new reportsController();
 
-$result = empty($_POST['id'])
-    ? $controller->saveNewIncome($_POST)
-    : $controller->updateIncome($_POST);
+if (empty($request['idInput'])) {
+    // Crear nuevo ingreso
+
+    // 1. Validar que vienen los datos del reporte
+    if (!empty($request['monthInput']) && !empty($request['yearInput'])) {
+        // 2. Guardar el reporte y obtener el ID insertado
+        $idReport = $controllerReport->saveNewReports($request);
+
+        if ($idReport !== false) {
+            $request['idReportInput'] = intval($idReport);
+            $result = $controllerIncome->saveNewIncome($request);
+        } else {
+            $result = false;
+        }
+    } else {
+        $result = false;
+    }
+} else {
+    // Actualizar ingreso existente (se supone que ya viene con idReportInput en el formulario si lo editas)
+    $result = $controllerIncome->updateIncome($request);
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Resultado</title>
 </head>
 <body>
-     <h1>Resultado de la operación</h1>
-    <?php
-    if ($result) {
-        echo '<p>Datos guardados correctamente</p>';
-    } else {
-        echo '<p>No se pudo guardar los datos</p>';
-    }
-    ?>
-    <a href="incomes">Volver </a>
+    <h1>Resultado de la operación</h1>
+    <?php if ($result): ?>
+        <p>Datos guardados correctamente.</p>
+    <?php else: ?>
+        <p>No se pudo guardar los datos.</p>
+    <?php endif; ?>
+    <a href="incomes.php">Volver</a>
 </body>
 </html>

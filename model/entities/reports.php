@@ -31,13 +31,22 @@ class Reports extends Entity
 
     public function save()
     {
-        $sql = "insert into reports (month,year) values ";
-        $sql .= "('" . $this->month . "','" . $this->year . "')";
+        $sql = "INSERT INTO reports (month, year) VALUES ('" . $this->month . "', '" . $this->year . "')";
         $conex = new Conexion();
+        
         $resultDb = $conex->execSQL($sql);
-        $conex->close();
-        return $resultDb;
+    
+        if ($resultDb) {
+            // Obtener el ID insertado
+            $insertedId = $conex->getConnection()->insert_id;
+            $conex->close();
+            return $insertedId;
+        } else {
+            $conex->close();
+            return false;
+        }
     }
+    
     public function update(){}
     public function delete(){}
 

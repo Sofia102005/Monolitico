@@ -9,55 +9,73 @@ include '../../controller/reportsController.php';
 use app\controller\incomeController;
 use app\controller\reportsController;
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $request = $_POST;
-
-    $controller1 = new reportsController();
-    $idReport = $controller1->saveNewReports($request); // Se guarda el reporte y obtienes el ID
-
-    $request['idReportInput'] = $idReport; // Lo agrega al array que irá a saveNewIncome
-
+$isEditMode = !empty($_GET['id']);
+$incomeData = null;
+if ($isEditMode) {
+    // Cargar ingreso por ID para mostrar datos en el formulario
     $controller = new incomeController();
-    $controller->saveNewIncome($request); // Con idReport válido
-}
+    $allIncomes = $controller->queryAllIncome();
 
+    // Buscar el ingreso con el id solicitado
+    foreach ($allIncomes as $inc) {
+        if ($inc->get('id') == $_GET['id']) {
+            $incomeData = $inc;
+            break;
+        }
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario</title>
+    <title><?php echo $isEditMode ? 'Modificar Ingreso' : 'Crear Ingreso'; ?></title>
 </head>
-
 <body>
-    <h1>
-        <?php echo empty($_GET['id']) ? 'Registrar incomes' : 'Modificar'; ?>
-    </h1>
-    <form action="saveUpdate.php" method="post">
-        <?php
-        if (!empty($_GET['id'])) {
-            echo '<input type="hidden" name="idInput" value="' . $_GET['id'] . '">';
-        }
-        ?>
+
+<h1><?php echo $isEditMode ? 'Modificar Ingreso' : 'Registrar Ingreso'; ?></h1>
+
+<form action="saveUpdate.php" method="post">
+    <?php
+    if ($isEditMode) {
+        echo '<input type="hidden" name="idInput" value="' . htmlspecialchars($incomeData->get('id')) . '">';
+        // También necesitas el idReport para actualizar, pero oculto (no editable)
+        // Suponemos que income tiene idReport, pero no está cargado en el objeto, habría que agregarlo en Income::all()
+        // Si no tienes idReport en Income::all(), tendrás que modificar ese método para incluirlo
+        // Por ahora asumiremos que se agregó:
+        echo '<input type="hidden" name="idReportInput" value="' . htmlspecialchars($incomeData->get('idReport')) . '">';
+    }
+    ?>
+    <div>
+        <label>Valor</label>
+        <input type="number" name="valueInput" required min="0" value="<?php echo $isEditMode ? htmlspecialchars($incomeData->get('value')) : ''; ?>">
+    </div>
+    <?php if (!$isEditMode): ?>
         <div>
-            <label>value</label>
-            <input type="number" name="valueInput" required>
+            <label>Mes</label>
+            <input type="text" name="monthInput" pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ\s]+" required>
         </div>
-        <input type="hidden" name="idReportInput" >
         <div>
-            <label>month</label>
-            <input type="text" name="monthInput" pattern="[A-Za-zñÑáéíóúÁÉÍÓÚ\s]+" title="Solo letras permitidas" required>
-        </div>
-        <div>
-            <label>year</label>
+            <label>Año</label>
             <input type="number" name="yearInput" min="1900" max="2025" required>
         </div>
+    <?php else: ?>
         <div>
-            <button type="submit">Guardar</button>
+            <label>Mes</label>
+            <input type="text" value="<?php echo htmlspecialchars($incomeData->get('month')); ?>" readonly>
         </div>
-    </form>
-    <a href="persons.php">Volver</a>
+        <div>
+            <label>Año</label>
+            <input type="number" value="<?php echo htmlspecialchars($incomeData->get('year')); ?>" readonly>
+        </div>
+    <?php endif; ?>
+    <div>
+        <button type="submit"><?php echo $isEditMode ? 'Actualizar' : 'Guardar'; ?></button>
+    </div>
+</form>
+
+<a href="incomes.php">Volver</a>
+
 </body>
 </html>
