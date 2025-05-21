@@ -12,8 +12,7 @@
   <div class="botones-container">
     <a class="boton" href="views/income/incomes.php">Ingresos</a>
     <a class="boton" href="views/categories/categories.php">Categorías</a>
-    <a class="boton" href="views/gastos.php">Gastos</a>
-    <a class="boton" href="views/viewGastos.php">Ver Gastos</a>
+    <a class="boton" href="views/bills/bills.php">Ver Gastos</a>
   </div>
 </body>
 </html>

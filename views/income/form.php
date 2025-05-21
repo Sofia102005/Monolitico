@@ -18,7 +18,7 @@ $isCategory = isset($_GET['type']) && $_GET['type'] === 'category';
 $incomeData = null;
 $categoryData = null;
 
-
+// Control de ingreso
 if (!$isCategory && $isEditMode) {
     $controller = new incomeController();
     $allIncomes = $controller->queryAllIncome();
@@ -31,7 +31,7 @@ if (!$isCategory && $isEditMode) {
     }
 }
 
-
+// Control de categoría
 if ($isCategory && $isEditMode) {
     $catController = new CategoriesController();
     $categories = $catController->queryAllCategories();
@@ -72,7 +72,8 @@ if (!$isEditMode && !$isCategory) {
     <meta charset="UTF-8">
     <title><?= $isCategory ? ($isEditMode ? 'Modificar Categoría' : 'Crear Categoría') : ($isEditMode ? 'Modificar Ingreso' : 'Registrar Ingreso') ?></title>
     <link rel="stylesheet" href="../../estilos.css">
-    </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
 <body>
 
 <h1><?= $isCategory ? ($isEditMode ? 'Modificar Categoría' : 'Crear Categoría') : ($isEditMode ? 'Modificar Ingreso' : 'Registrar Ingreso') ?></h1>
@@ -86,7 +87,7 @@ if (!$isEditMode && !$isCategory) {
     <?php endif; ?>
 
     <?php if ($isCategory): ?>
-        
+        <!-- Formulario para Categoría -->
         <div>
             <label for="nameInput">Nombre de Categoría</label>
             <input type="text" id="nameInput" name="nameInput" required
@@ -100,7 +101,7 @@ if (!$isEditMode && !$isCategory) {
         </div>
 
     <?php else: ?>
-       
+        <!-- Formulario para Ingreso -->
         <div>
             <label for="valueInput">Valor</label>
             <input type="number" id="valueInput" name="valueInput" required min="0"

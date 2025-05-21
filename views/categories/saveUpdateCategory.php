@@ -3,8 +3,6 @@ require_once '../../model/conexionDB/conexion.php';
 require_once '../../model/entities/entity.php';
 require_once '../../model/entities/Categories.php';
 require_once '../../controller/CategoriesController.php';
-require_once '../../controller/categoriesController.php';
-
 
 use app\controller\CategoriesController;
 
@@ -13,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $percentage = floatval($_POST['percentageInput'] ?? 0);
     $id = $_POST['idInput'] ?? null;
 
-    
+    // Validar los datos
     $errores = [];
 
     if (empty($name)) {

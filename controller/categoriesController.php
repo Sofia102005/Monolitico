@@ -13,27 +13,28 @@ class CategoriesController
         return $category->all();
     }
 
-    public function saveNewCategory(array $request)
+    public function saveNewCategory($request)
     {
         $category = new Categories();
         $category->set('name', $request['nameInput']);
         $category->set('percentage', $request['percentageInput']);
-        return $category->save();
+        $category->save();
     }
 
-    public function updateCategory(array $request)
+    public function updateCategory($request)
     {
         $category = new Categories();
         $category->set('id', $request['idInput']);
         $category->set('name', $request['nameInput']);
         $category->set('percentage', $request['percentageInput']);
-        return $category->update();
+        $category->update();
     }
 
     public function deleteCategory($idCategory)
     {
         $category = new Categories();
-        $category->set('idCategory', $idCategory);
+        $category->set('id', $idCategory);
+
 
         try {
             $result = $category->delete();
