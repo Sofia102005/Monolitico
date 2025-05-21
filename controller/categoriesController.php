@@ -10,46 +10,44 @@ class CategoriesController
     public function queryAllCategories()
     {
         $category = new Categories();
-        $data = $category->all();
-        return $data;
+        return $category->all();
     }
 
-    public function saveNewCategory($request)
+    public function createCategory($name, $percentage)
     {
         $category = new Categories();
-        $category->set('name', $request['nameInput']);
-        $category->set('percentage', $request['percentageInput']);
+        $category->set('name', $name);
+        $category->set('percentage', $percentage);
         return $category->save();
     }
 
-    public function updateCategory($request)
+    public function updateCategory($id, $name, $percentage)
     {
         $category = new Categories();
-        $category->set('id', $request['idInput']);
-        $category->set('name', $request['nameInput']);
-        $category->set('percentage', $request['percentageInput']);
+        $category->set('id', $id);
+        $category->set('name', $name);
+        $category->set('percentage', $percentage);
         return $category->update();
     }
 
-
-
-
-    public function deleteCategory($idCategory){
+    public function deleteCategory($idCategory)
+    {
         $category = new Categories();
         $category->set('idCategory', $idCategory);
 
         try {
             $result = $category->delete();
             if ($result) {
-                return "Mesa eliminada correctamente.";
+                return "Categoría eliminada correctamente.";
             } else {
-                return "No se pudo eliminar la mesa.";
+                return "No se pudo eliminar la categoría.";
             }
         } catch (mysqli_sql_exception $message) {
             if (str_contains($message->getMessage(), 'foreign key constraint fails')) {
-                return "No se puede eliminar la categoria porque está relacionada con otros registros.";
+                return "No se puede eliminar la categoría porque está relacionada con otros registros.";
+            } else {
+                return "Error al eliminar la categoría: " . $message->getMessage();
             }
         }
     }
-    
 }

@@ -1,4 +1,3 @@
-
 <?php
 $month = $_GET['month'] ?? '';
 $year = $_GET['year'] ?? '';

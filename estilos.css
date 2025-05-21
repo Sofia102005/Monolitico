@@ -1,4 +1,4 @@
-/* Estilo general del body */
+/* ================== ESTILOS GENERALES ================== */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #ff7e5f, #feb47b);
@@ -8,181 +8,6 @@ body {
   min-height: 100vh;
 }
 
-/* Encabezado */
-h1 {
-  text-align: center;
-  color: #fff;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-  margin: 40px 0;
-}
-
-/* Contenedor para centrar la tabla */
-.tabla-container {
-  display: flex;
-  justify-content: center;
-  padding: 0 20px;
-}
-
-/* Estilo general de la tabla */
-.tabla-estilizada {
-  width: 100%;
-  max-width: 800px;
-  border-collapse: collapse;
-  background-color: #fff;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-}
-
-/* Encabezado de la tabla */
-.tabla-estilizada thead {
-  background-color: #ff7e5f;
-  color: #fff;
-}
-
-/* Celdas */
-.tabla-estilizada th,
-.tabla-estilizada td {
-  padding: 15px;
-  text-align: center;
-  border-bottom: 1px solid #ddd;
-}
-
-.tabla-estilizada tbody tr:last-child td {
-  border-bottom: none;
-}
-
-.tabla-estilizada tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.tabla-estilizada tbody tr:hover {
-  background-color: #ffe3d6;
-}
-
-.boton {
-  display: inline-block;
-  text-align: center;
-  text-decoration: none;
-  background-color: #fff;
-  color: #ff7e5f;
-  font-weight: bold;
-  padding: 12px 25px;
-  border-radius: 10px;
-  border: 2px solid #fff;
-  transition: all 0.3s ease;
-  width: 220px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  cursor: pointer;
-}
-
-.boton:hover {
-  background-color: #ff7e5f;
-  color: #fff;
-  border-color: #fff;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
-
-.boton-tabla {
-  padding: 6px 15px;
-  font-size: 13px;
-  width: auto;
-}
-
-.botones-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-}
-
-/* ============= ESTILOS PARA FORMULARIOS ============= */
-
-form {
-  background-color: #fff;
-  max-width: 500px;
-  margin: 0 auto 40px auto;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-form div {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  margin-bottom: 8px;
-  font-weight: bold;
-  color: #444;
-}
-
-input[type="text"],
-input[type="number"] {
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus {
-  border-color: #ff7e5f;
-}
-
-button[type="submit"] {
-  background-color: #ff7e5f;
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
-}
-
-button[type="submit"]:hover {
-  background-color: #e7634e;
-}
-
-/* Enlace tipo botón para "Volver" */
-a {
-  display: block;
-  text-align: center;
-  margin: 20px auto;
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-  width: 200px;
-  background-color: #fff;
-  color: #ff7e5f;
-  padding: 12px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  transition: background-color 0.3s ease;
-}
-
-a:hover {
-  background-color: #ff7e5f;
-  color: #fff;
-}
-/* Fondo general */
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #ff7e5f, #feb47b);
-  color: #333;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-}
-
-/* Título principal */
 h1 {
   text-align: center;
   color: #fff;
@@ -190,7 +15,7 @@ h1 {
   margin: 40px 0 20px;
 }
 
-/* Contenedor para centrar tabla o formularios */
+/* ================== CONTENEDORES ================== */
 .tabla-container,
 form {
   display: flex;
@@ -199,7 +24,15 @@ form {
   padding: 0 20px;
 }
 
-/* Tabla estilizada */
+.botones-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+/* ================== TABLA ================== */
 .tabla-estilizada {
   width: 100%;
   max-width: 800px;
@@ -234,7 +67,65 @@ form {
   background-color: #ffe3d6;
 }
 
-/* Botón base */
+/* ================== FORMULARIO ================== */
+form {
+  background-color: #fff;
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+form div {
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+form label {
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #444;
+}
+
+form input[type="text"],
+form input[type="number"] {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+form input:focus {
+  border-color: #ff7e5f;
+}
+
+form button,
+button[type="submit"] {
+  margin-top: 15px;
+  background-color: #ff7e5f;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover,
+button[type="submit"]:hover {
+  background-color: #e7634e;
+}
+
+/* ================== BOTONES ================== */
 .boton {
   display: inline-block;
   text-align: center;
@@ -246,9 +137,9 @@ form {
   border-radius: 10px;
   border: 2px solid #fff;
   transition: all 0.3s ease;
-  width: 220px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  width: 220px;
 }
 
 .boton i {
@@ -262,48 +153,29 @@ form {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Botones más pequeños para tabla */
 .boton-tabla {
   padding: 6px 15px;
   font-size: 13px;
   width: auto;
 }
 
-/* Contenedor vertical para botones */
-.botones-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  margin-top: 30px;
-}
-
-/* Inputs de formulario */
-form div {
-  margin: 10px 0;
-  width: 100%;
-  max-width: 400px;
-}
-
-form label {
+/* ================== ENLACES COMO BOTONES ================== */
+a {
   display: block;
-  margin-bottom: 5px;
-  color: #fff;
+  text-align: center;
+  margin: 20px auto;
+  color: #ff7e5f;
+  background-color: #fff;
+  text-decoration: none;
   font-weight: bold;
+  width: 200px;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
 }
 
-form input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-  font-size: 16px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+a:hover {
+  background-color: #ff7e5f;
+  color: #fff;
 }
-
-/* Botón dentro del formulario */
-form button {
-  margin-top: 15px;
-}
-
