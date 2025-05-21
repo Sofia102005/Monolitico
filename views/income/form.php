@@ -11,12 +11,11 @@ use app\controller\reportsController;
 
 $isEditMode = !empty($_GET['id']);
 $incomeData = null;
+
 if ($isEditMode) {
-    // Cargar ingreso por ID para mostrar datos en el formulario
     $controller = new incomeController();
     $allIncomes = $controller->queryAllIncome();
 
-    // Buscar el ingreso con el id solicitado
     foreach ($allIncomes as $inc) {
         if ($inc->get('id') == $_GET['id']) {
             $incomeData = $inc;
@@ -31,26 +30,26 @@ if ($isEditMode) {
 <head>
     <meta charset="UTF-8">
     <title><?php echo $isEditMode ? 'Modificar Ingreso' : 'Crear Ingreso'; ?></title>
+    <link rel="stylesheet" href="../../estilos.css">
+    <!-- Íconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
 
 <h1><?php echo $isEditMode ? 'Modificar Ingreso' : 'Registrar Ingreso'; ?></h1>
 
 <form action="saveUpdate.php" method="post">
-    <?php
-    if ($isEditMode) {
-        echo '<input type="hidden" name="idInput" value="' . htmlspecialchars($incomeData->get('id')) . '">';
-        // También necesitas el idReport para actualizar, pero oculto (no editable)
-        // Suponemos que income tiene idReport, pero no está cargado en el objeto, habría que agregarlo en Income::all()
-        // Si no tienes idReport en Income::all(), tendrás que modificar ese método para incluirlo
-        // Por ahora asumiremos que se agregó:
-        echo '<input type="hidden" name="idReportInput" value="' . htmlspecialchars($incomeData->get('idReport')) . '">';
-    }
-    ?>
+    <?php if ($isEditMode): ?>
+        <input type="hidden" name="idInput" value="<?php echo htmlspecialchars($incomeData->get('id')); ?>">
+        <input type="hidden" name="idReportInput" value="<?php echo htmlspecialchars($incomeData->get('idReport')); ?>">
+    <?php endif; ?>
+
     <div>
         <label>Valor</label>
-        <input type="number" name="valueInput" required min="0" value="<?php echo $isEditMode ? htmlspecialchars($incomeData->get('value')) : ''; ?>">
+        <input type="number" name="valueInput" required min="0"
+            value="<?php echo $isEditMode ? htmlspecialchars($incomeData->get('value')) : ''; ?>">
     </div>
+
     <?php if (!$isEditMode): ?>
         <div>
             <label>Mes</label>
@@ -70,12 +69,18 @@ if ($isEditMode) {
             <input type="number" value="<?php echo htmlspecialchars($incomeData->get('year')); ?>" readonly>
         </div>
     <?php endif; ?>
+
     <div>
-        <button type="submit"><?php echo $isEditMode ? 'Actualizar' : 'Guardar'; ?></button>
+        <button type="submit" class="boton">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <?php echo $isEditMode ? 'Actualizar' : 'Guardar'; ?>
+        </button>
     </div>
 </form>
 
-<a href="incomes.php">Volver</a>
+<div class="botones-container">
+    <a class="boton" href="incomes.php"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+</div>
 
 </body>
 </html>

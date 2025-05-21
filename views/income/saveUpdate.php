@@ -39,6 +39,7 @@ if (empty($request['idInput'])) {
 <head>
     <meta charset="UTF-8">
     <title>Resultado</title>
+       <link rel="stylesheet" href="../../estilos.css">
 </head>
 <body>
     <h1>Resultado de la operación</h1>
